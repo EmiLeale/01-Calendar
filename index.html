@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Calendar by Emi</title>
+    
+</head>
+<body>
+    <section class="calendar"> 
+        <!-- 01/02/2025 1hr: Structure Calendar on HTML and give it some styling !-->
+        <!-- 05/02/2025 2hrs: Styling CSS and start to build Javascript !-->
+        <!-- 06/02/2025 3hrs: Continue build Javascript !-->
+        <!-- 08/02/2025 3hrs: Continue build Javascript !-->
+        <!-- 10/02/2025 2hrs: Continue build Javascript !-->
+        <!-- 11/02/2025 4hrs: Continue build Javascript !-->
+
+        
+        <div class="switch-calendar">
+            <button id="arrow-back" onclick="changeMonth(-1)"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg></button>
+            <p id="info-select">Month</p>
+            <button id="arrow-next" onclick="changeMonth(1)"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg></button>
+            <select class="switch-calendar_change-view" id="switch-mode">
+                <option>Month</option>
+                <option>Day</option>
+                <option>Week</option>
+                <option>Year</option>
+            </select>
+        </div>
+
+        <div class="calendar-monthly" id="calendar-monthly"><!-- Monthly calendar -->
+        </div>
+
+        <div class="calendar-weekly hidden" id="calendar-weekly"><!-- Weekly calendar -->
+            <div class="calendar-day_day">
+                <button id="arrow-back-weekly" onclick="changeWeek(-7)"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg></button>
+                <p class="calendar-weekly_numbers" id="calendar-weekly_numbers">Week</p>
+                <button id="arrow-next-weekly" onclick="changeWeek(7)"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg></button>
+            </div>
+            <div class="calendar-weekly_day" id="calendar-weekly_day">
+            </div>
+        </div>
+        
+        <div class="calendar-day hidden" id="calendar-day"><!-- Day calendar --> 
+            <div class="calendar-day_day">
+                <button id="arrow-back-daily" onclick="changeDay(-1)"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg></button>
+                <p class="calendar-day_day_number" id="calendar-day_day_number">Day</p>
+                <button id="arrow-next-daily" onclick="changeDay(1)"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg></button>
+                
+            </div>
+            <div class="calendar-day_horarios">
+                <div class="calendar-day_horarios_horarios"><span>6hs</span><span>10hs</span><span>14hs</span><span>18hs</span><span>20hs</span></div>
+                <div class="calendar-day_horarios_2hs"><p class="calendar_day_datos">Datos</p><p class="calendar_day_datos">Datos</p></div>
+                <div class="calendar-day_horarios_2hs"></div>
+                <div class="calendar-day_horarios_2hs"></div>
+                <div class="calendar-day_horarios_2hs"></div>
+                <div class="calendar-day_horarios_2hs"></div>
+                <div class="calendar-day_horarios_2hs"></div>
+                <div class="calendar-day_horarios_2hs"></div>
+                <div class="calendar-day_horarios_2hs"></div>
+                <div class="calendar-day_horarios_2hs"></div>
+                <div class="calendar-day_horarios_2hs"></div>
+                <div class="calendar-day_horarios_2hs"></div>
+                <div class="calendar-day_horarios_2hs"></div>
+            </div>
+        </div>
+
+        <div class="calendar-yearly hidden" id="calendar-yearly"><!-- Yearly calendar -->
+            <div class="calendar-yearly_month_container">
+                <h3>January</h3>
+                <div class="calendar-yearly_month">
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                </div>
+            </div>
+            <div class="calendar-yearly_month_container">
+                <h3>February</h3>
+                <div class="calendar-yearly_month">
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                </div>
+            </div>
+            <div class="calendar-yearly_month_container">
+
+                <h3>March</h3>
+                <div class="calendar-yearly_month">
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                </div>
+            </div>
+            <div class="calendar-yearly_month_container">
+
+                <h3>April</h3>
+                <div class="calendar-yearly_month">
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                </div>
+            </div>
+            <div class="calendar-yearly_month_container">
+
+                <h3>May</h3>
+                <div class="calendar-yearly_month">
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                </div>
+            </div>
+            <div class="calendar-yearly_month_container">
+
+                <h3>June</h3>
+                <div class="calendar-yearly_month">
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                </div>
+            </div>
+            <div class="calendar-yearly_month_container">
+
+                <h3>July</h3>
+                <div class="calendar-yearly_month">
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                </div>
+            </div>
+            <div class="calendar-yearly_month_container">
+
+                <h3>August</h3>
+                <div class="calendar-yearly_month">
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                </div>
+            </div>
+            <div class="calendar-yearly_month_container">
+
+                <h3>September</h3>
+                <div class="calendar-yearly_month">
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                </div>
+            </div>
+            <div class="calendar-yearly_month_container">
+
+                <h3>October</h3>
+                <div class="calendar-yearly_month">
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                </div>
+            </div>
+            <div class="calendar-yearly_month_container">
+
+                <h3>November</h3>
+                <div class="calendar-yearly_month">
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                </div>
+            </div>
+            <div class="calendar-yearly_month_container">
+
+                <h3>December</h3>
+                <div class="calendar-yearly_month">
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                    <div class="calendar-yearly_month_day">1</div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+    <script src="script.js"></script>
+</body>
+</html>

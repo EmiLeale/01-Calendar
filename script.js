@@ -29,6 +29,7 @@ const switchMode = () => {
       calendarMonthly.classList.add("hidden");
       calendarWeekly.classList.add("hidden");
       calendarYearly.classList.add("hidden");
+      actualizeMonth();
       generateAgend();
       break;
     case "Week":
@@ -36,6 +37,8 @@ const switchMode = () => {
       calendarMonthly.classList.add("hidden");
       calendarDaily.classList.add("hidden");
       calendarYearly.classList.add("hidden");
+      actualizeMonth();
+
       generateWeek();
       break;
     case "Year":
@@ -51,6 +54,7 @@ const switchMode = () => {
       calendarDaily.classList.add("hidden");
       calendarWeekly.classList.add("hidden");
       calendarYearly.classList.add("hidden");
+      actualizeMonth();
       generateCalendar(currentMonth, currentYear);
   }
 };
@@ -100,114 +104,182 @@ const whichDayIsIt = (day) => {
   return dayString;
 };
 
+// function getWeekStartingSunday(
+//   date = new Date(`${currentYear} ${currentMonth + 1} ${currentDay}`)
+// ) {
+//   let dayOfWeek = date.getDay();
+//   let startOfWeek = new Date(date);
+//   startOfWeek.setDate(date.getDate() - dayOfWeek);
+//   let weekNumbers = [];
+
+//   let sunday = startOfWeek.getDate();
+
+//   for (let i = 0; i < 7; i++) {
+//     weekNumbers.push(sunday + i);
+//   }
+
+//   return weekNumbers;
+// }
 function getWeekStartingSunday(
-  date = new Date(`${currentYear} ${currentMonth + 1} ${currentDay}`)
+  date = new Date(currentYear, currentMonth, currentDay)
 ) {
   let dayOfWeek = date.getDay();
   let startOfWeek = new Date(date);
   startOfWeek.setDate(date.getDate() - dayOfWeek);
-  let weekNumbers = [];
 
-  let sunday = startOfWeek.getDate();
-
-  for (let i = 0; i < 7; i++) {
-    weekNumbers.push(sunday + i);
+  // Si la semana comienza en el mes anterior, ajustamos el mes
+  if (startOfWeek.getMonth() !== currentMonth) {
+    startOfWeek.setMonth(currentMonth);
+    startOfWeek.setDate(1); // Comenzamos desde el primer día del mes actual
   }
 
+  let weekNumbers = [];
+  for (let i = 0; i < 7; i++) {
+    let day = new Date(startOfWeek);
+    day.setDate(startOfWeek.getDate() + i);
+    weekNumbers.push({
+      day: day.getDate(),
+      month: day.getMonth() + 1,
+      year: day.getFullYear(),
+    });
+  }
   return weekNumbers;
 }
-
 function generateWeek() {
-  day = currentDay;
   calendarWeeklyDays.innerHTML = "";
+  let currentWeek = getWeekStartingSunday();
+  console.log(getWeekStartingSunday());
 
-  for (let i = 0; i < 1; i++) {
-    for (let j = 0; j < 7; j++) {
-      let dayDiv = document.createElement("div");
-      switch (j) {
-        case (j = 0):
-          dayDiv.innerHTML = `<p class="calendar-weekly_day_number_p">Sun</p><p class="calendar-weekly_day_number_p">${addZeroToNumber(
-            getWeekStartingSunday()[0]
-          )}</p>`;
-          break;
-        case (j = 1):
-          dayDiv.innerHTML = `<p class="calendar-weekly_day_number_p">Mon</p><p class="calendar-weekly_day_number_p">${addZeroToNumber(
-            getWeekStartingSunday()[1]
-          )}</p>`;
-          break;
-        case (j = 2):
-          dayDiv.innerHTML = `<p class="calendar-weekly_day_number_p">Tue</p><p class="calendar-weekly_day_number_p">${addZeroToNumber(
-            getWeekStartingSunday()[2]
-          )}</p>`;
-          break;
-        case (j = 3):
-          dayDiv.innerHTML = `<p class="calendar-weekly_day_number_p">Wed</p><p class="calendar-weekly_day_number_p">${addZeroToNumber(
-            getWeekStartingSunday()[3]
-          )}</p>`;
-          break;
-        case (j = 4):
-          dayDiv.innerHTML = `<p class="calendar-weekly_day_number_p">Thu</p><p class="calendar-weekly_day_number_p">${addZeroToNumber(
-            getWeekStartingSunday()[4]
-          )}</p>`;
-          break;
-        case (j = 5):
-          dayDiv.innerHTML = `<p class="calendar-weekly_day_number_p">Fri</p><p class="calendar-weekly_day_number_p">${addZeroToNumber(
-            getWeekStartingSunday()[5]
-          )}</p>`;
-          break;
-        case (j = 6):
-          dayDiv.innerHTML = `<p class="calendar-weekly_day_number_p">Sat</p><p class="calendar-weekly_day_number_p">${addZeroToNumber(
-            getWeekStartingSunday()[6]
-          )}</p>`;
-          break;
-      }
-      dayDiv.classList.add("calendar-weekly_day_number");
-      calendarWeeklyDays.appendChild(dayDiv);
-      day++;
-    }
+  for (let i = 0; i < currentWeek.length; i++) {
+    let dayDiv = document.createElement("div");
+    let dayObj = currentWeek[i];
+    dayDiv.innerHTML = `${whichDayIsIt(i)} ${addZeroToNumber(dayObj.day)}`;
+    dayDiv.classList.add("calendar-weekly_day_number");
+    calendarWeeklyDays.appendChild(dayDiv);
   }
+
+  // Mostramos el rango de la semana
+  let startDate = currentWeek[0];
+  let endDate = currentWeek[currentWeek.length - 1];
   weekCalendarOnWeek.innerText = `${addZeroToNumber(
-    getWeekStartingSunday()[0]
-  )} to ${addZeroToNumber(getWeekStartingSunday()[6])}`;
+    startDate.day
+  )} - ${addZeroToNumber(endDate.day)}`;
 }
+// function generateWeek() {
+//   day = currentDay;
+//   calendarWeeklyDays.innerHTML = "";
+
+//   let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+//   let currentWeek = getWeekStartingSunday();
+//   console.log(currentDay, currentWeek);
+//   if (currentWeek.includes(daysInMonth + 1)) {
+//     for (let i = 0; i < currentWeek.length; i++) {
+//       if (currentWeek[i] > daysInMonth) {
+//         currentWeek[i] = 1;
+//       }
+//     }
+//   }
+
+//   for (let i = 0; i < 1; i++) {
+//     for (let j = 0; j < 7; j++) {
+//       let dayDiv = document.createElement("div");
+//       switch (j) {
+//         case (j = 0):
+//           dayDiv.innerHTML = `<p class="calendar-weekly_day_number_p">Sun</p><p class="calendar-weekly_day_number_p">${addZeroToNumber(
+//             currentWeek[0]
+//           )}</p>`;
+//           break;
+//         case (j = 1):
+//           dayDiv.innerHTML = `<p class="calendar-weekly_day_number_p">Mon</p><p class="calendar-weekly_day_number_p">${addZeroToNumber(
+//             currentWeek[1]
+//           )}</p>`;
+//           break;
+//         case (j = 2):
+//           dayDiv.innerHTML = `<p class="calendar-weekly_day_number_p">Tue</p><p class="calendar-weekly_day_number_p">${addZeroToNumber(
+//             currentWeek[2]
+//           )}</p>`;
+//           break;
+//         case (j = 3):
+//           dayDiv.innerHTML = `<p class="calendar-weekly_day_number_p">Wed</p><p class="calendar-weekly_day_number_p">${addZeroToNumber(
+//             currentWeek[3]
+//           )}</p>`;
+//           break;
+//         case (j = 4):
+//           dayDiv.innerHTML = `<p class="calendar-weekly_day_number_p">Thu</p><p class="calendar-weekly_day_number_p">${addZeroToNumber(
+//             currentWeek[4]
+//           )}</p>`;
+//           break;
+//         case (j = 5):
+//           dayDiv.innerHTML = `<p class="calendar-weekly_day_number_p">Fri</p><p class="calendar-weekly_day_number_p">${addZeroToNumber(
+//             currentWeek[5]
+//           )}</p>`;
+//           break;
+//         case (j = 6):
+//           dayDiv.innerHTML = `<p class="calendar-weekly_day_number_p">Sat</p><p class="calendar-weekly_day_number_p">${addZeroToNumber(
+//             currentWeek[6]
+//           )}</p>`;
+//           break;
+//       }
+//       dayDiv.classList.add("calendar-weekly_day_number");
+//       calendarWeeklyDays.appendChild(dayDiv);
+//       day++;
+//     }
+//   }
+//   weekCalendarOnWeek.innerText = `${addZeroToNumber(
+//     currentWeek[0]
+//   )} to ${addZeroToNumber(currentWeek[6])}`;
+// }
+
 arrowBackCalendar.addEventListener("click", generateWeek);
 arrowNextCalendar.addEventListener("click", generateWeek);
 
 function changeWeek(offset) {
-  // currentWeek = getWeekStartingSunday()[0];
+  currentDay += offset; // Cambiamos de semana
 
   let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
   let daysInLastMonth = new Date(currentYear, currentMonth, 0).getDate();
 
-  currentDay += offset;
-  // console.log(weekNumbers);
-
-  // if (getWeekStartingSunday().includes(daysInMonth + 1)) {
-  //   for (let i = 0; i < getWeekStartingSunday().length; i++) {
-  //     if (getWeekStartingSunday()[i] > daysInMonth) {
-  //       getWeekStartingSunday()[i] = 1;
-  //       console.log(getWeekStartingSunday());
-  //     }
-  //   }
-  // }
-
   if (currentDay < 1) {
     currentMonth--;
-    currentDay = daysInLastMonth;
+    if (currentMonth < 0) {
+      currentMonth = 11;
+      currentYear--;
+    }
+    currentDay = daysInLastMonth + currentDay; // Ajustamos el día
   } else if (currentDay > daysInMonth) {
     currentMonth++;
-    currentDay = 1;
+    if (currentMonth > 11) {
+      currentMonth = 0;
+      currentYear++;
+    }
+    currentDay = currentDay - daysInMonth; // Ajustamos el día
   }
-  if (currentMonth < 0) {
-    currentMonth = 11;
-    currentYear--;
-  } else if (currentMonth > 11) {
-    currentMonth = 0;
-    currentYear++;
-  }
+
   actualizeMonth();
   generateWeek();
 }
+// function changeWeek(offset) {
+//   let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+//   let daysInLastMonth = new Date(currentYear, currentMonth, 0).getDate();
+//   currentDay += offset;
+
+//   if (currentDay < 1) {
+//     currentMonth--;
+//     currentDay = daysInLastMonth;
+//   } else if (currentDay > daysInMonth) {
+//     currentMonth++;
+//     currentDay = 1;
+//   }
+//   if (currentMonth < 0) {
+//     currentMonth = 11;
+//     currentYear--;
+//   } else if (currentMonth > 11) {
+//     currentMonth = 0;
+//     currentYear++;
+//   }
+//   actualizeMonth();
+//   generateWeek();
+// }
 
 // Fuction to actualize the day
 function generateAgend() {

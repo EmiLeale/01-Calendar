@@ -2,6 +2,16 @@
   font-family: "Sora";
   src: url(/fonts/Sora/Sora-VariableFont_wght.ttf);
 }
+:root {
+  --background-day: #f9f9f9;
+  --text-day: #333333;
+  --secondary-elements-day: #e0e0e0;
+  --buttons-day: #4caf50;
+  --background-night: #121212;
+  --text-night: #ffffff;
+  --secondary-elements-night: #333333;
+  --buttons-night: #2e7d32;
+}
 * {
   font-family: "Sora", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
@@ -32,7 +42,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #a2c0c088;
+  background-color: var(--background-day);
 }
 .calendar {
   width: clamp(400px, 600px, 900px);
@@ -48,12 +58,12 @@ button {
   display: flex;
   align-items: center;
 }
-svg {
+.calendar svg {
   border: 1px solid transparent;
-  color: black;
+  color: var(--background-night);
 }
-svg:hover {
-  background-color: #f5f5f5;
+.calendar svg:hover {
+  background-color: var(--secondary-elements-day);
   border-radius: 50%;
   transition: background-color 0.2s cubic-bezier(0.52, 0.38, 0.95, 0.8);
 }
@@ -84,16 +94,9 @@ select {
 select option {
   width: 100%;
   border: 1px solid transparent;
-  background-color: #a2c0c088;
+  background-color: var(--background-day);
   text-align: center;
   font-size: 0.8rem;
-}
-select option:hover,
-select option:active,
-select option:focus,
-select option:focus-within,
-select option:target {
-  background-color: #a2c0c0;
 }
 
 /* MONHTHLY SELECTION */
@@ -112,17 +115,17 @@ select option:target {
   align-items: center;
 }
 .calendar-monthly_day_number {
-  background-color: #f5f5f5;
+  background-color: var(--secondary-elements-day);
   font-size: 0.8rem;
   border: 1px solid transparent;
   transition: all 0.1s cubic-bezier(0.52, 0.38, 0.95, 0.8);
 }
 .calendar-monthly_day_number:hover,
 .calendar-monthly_day_number_out-of-month:hover {
-  border: 1px solid black;
+  border: 1px solid var(--secondary-elements-day);
 }
 .calendar-monthly_day_number_out-of-month {
-  background-color: #f5f5f5;
+  background-color: var(--secondary-elements-day);
   font-size: 0.8rem;
   opacity: 0.5;
   border: 1px solid transparent;
@@ -151,7 +154,7 @@ select option:target {
   width: 100%;
 }
 .calendar-weekly_day {
-  background-color: #f5f5f5;
+  background-color: var(--secondary-elements-day);
   display: flex;
   width: 100%;
   height: 100%;
@@ -159,13 +162,13 @@ select option:target {
 .calendar-weekly_day_number {
   height: 100%;
   width: 100%;
-  border-left: 1px solid #a2c0c0;
-  border-top: 1px solid #a2c0c0;
-  border-bottom: 1px solid #a2c0c0;
+  border-left: 1px solid var(--background-day);
+  border-top: 1px solid var(--background-day);
+  border-bottom: 1px solid var(--background-day);
   text-align: center;
 }
 .calendar-weekly_day_number:last-of-type {
-  border-right: 1px solid #a2c0c0;
+  border-right: 1px solid var(--background-day);
 }
 .calendar-weekly_day_number_p {
   height: 1.6rem;
@@ -188,7 +191,6 @@ select option:target {
 .calendar-weekly_numbers {
   width: 60%;
   height: 2rem;
-  background-color: #f5f5f5;
   border-radius: 5rem;
   display: flex;
   justify-content: center;
@@ -196,14 +198,14 @@ select option:target {
 }
 .calendar-day_horarios {
   height: 100%;
-  background-color: #f5f5f5;
+  background-color: var(--secondary-elements-day);
   display: grid;
   grid-template-columns: 1fr 6fr;
   grid-template-rows: repeat(12, 1fr);
 }
 .calendar-day_horarios_horarios {
   grid-area: 1 / 1 / 13 / 2;
-  border: 1px solid #a2c0c0;
+  border: 1px solid var(--background-day);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -215,11 +217,11 @@ select option:target {
 }
 
 .calendar-day_horarios_2hs {
-  border-top: 1px solid #a2c0c0;
-  border-right: 1px solid #a2c0c0;
+  border-top: 1px solid var(--background-day);
+  border-right: 1px solid var(--background-day);
 }
 .calendar-day_horarios_2hs:last-of-type {
-  border-bottom: 1px solid #a2c0c0;
+  border-bottom: 1px solid var(--background-day);
 }
 
 /* YEARLY SELECTION */
@@ -274,4 +276,112 @@ select option:target {
   background-color: #cd85af;
   border-radius: 0;
   transition: all 0.5s cubic-bezier(0.52, 0.38, 0.95, 0.8);
+}
+
+/* ACTIVITY SECTION */
+.activity {
+  height: fit-content;
+  width: fit-content;
+  background-color: var(--secondary-elements-day);
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.activity_title {
+  width: 15rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid black;
+  display: flex;
+  align-items: end;
+  justify-content: space-evenly;
+}
+#place-activity svg:hover {
+  border-radius: 100%;
+  background-color: var(--background-day);
+  cursor: pointer;
+  transition: background-color 0.2s cubic-bezier(0.52, 0.38, 0.95, 0.8);
+}
+
+.activity_activities {
+  height: 100%;
+  width: 15rem;
+  padding-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.activity_activities_individual {
+  width: 80%;
+  padding: 0.5rem 0;
+  text-align: center;
+}
+.activity_name-of-activity {
+  padding-left: 0.5rem;
+}
+
+/* NEW ACTIVITY FORM */
+.activity_new-activity {
+  height: fit-content;
+  width: 15rem;
+  background-color: var(--secondary-elements-day);
+  border-radius: 1rem;
+}
+.activity_new-activity form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.activity_new-activity form * {
+  margin: 0.3rem 0;
+  font-size: 0.9rem;
+  border: 1px solid var(--background-day);
+  border-radius: 0.5rem;
+}
+.activity_new-activity form input {
+  height: 2rem;
+  width: 100%;
+  background-color: var(--background-day);
+  outline: 1px solid transparent;
+}
+.activity_new-activity form textarea {
+  max-width: 100%;
+  height: 5rem;
+  max-height: 10rem;
+  background-color: var(--background-day);
+  outline: 1px solid transparent;
+}
+.activity_new-activity form input:focus,
+.activity_new-activity form textarea:focus {
+  outline: 1px solid var(--background-night);
+}
+.activity_new-activity form textarea,
+.activity_new-activity form input {
+  padding: 0.3rem;
+}
+.activity_new-activity form div {
+  display: flex;
+  justify-content: space-around;
+  border: none;
+}
+.activity_new-activity form div input:first-of-type {
+  border: none;
+  outline: none;
+}
+.activity_new-activity form div input {
+  width: 30%;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+}
+.activity_new-activity form .save-activity {
+  width: 50%;
+  border-radius: 1rem;
+  align-self: center;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s cubic-bezier(0.52, 0.38, 0.95, 0.8);
+}
+.activity_new-activity form .save-activity:hover {
+  background-color: var(--background-day);
 }

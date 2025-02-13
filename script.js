@@ -13,6 +13,10 @@ const calendarYearly = document.getElementById("calendar-yearly");
 const infoSelect = document.getElementById("info-select");
 const dayCalendarOnDaily = document.getElementById("calendar-day_day_number");
 const weekCalendarOnWeek = document.getElementById("calendar-weekly_numbers");
+const lucideMoon = document.getElementById("lucide-moon");
+const lucideSun = document.getElementById("lucide-sun");
+const link = document.getElementById("theme");
+const switchTheme = document.getElementById("switch-theme");
 
 let currentDate = new Date();
 let currentDay = currentDate.getDate();
@@ -20,6 +24,24 @@ let currentMonth = currentDate.getMonth();
 let currentYear = currentDate.getFullYear();
 console.log(currentDate);
 let dayString;
+
+// //Switch the theme of the page
+// function changeTheme() {
+//   if (link.href.endsWith("styles.css")) {
+//     link.href = link.href.replace("styles.css", "styles-night.css");
+//     lucideSun.classList.remove("hidden");
+//     lucideMoon.classList.add("hidden");
+//   } else if (link.href.endsWith("styles-night.css")) {
+//     link.href = link.href.replace("styles-night.css", "styles.css");
+//     lucideSun.classList.add("hidden");
+//     lucideMoon.classList.remove("hidden");
+//   } else {
+//     link.href = link.href.replace("styles.css", "styles-night.css");
+//     lucideSun.classList.remove("hidden");
+//     lucideMoon.classList.add("hidden");
+//   }
+// }
+// switchTheme.addEventListener("click", changeTheme);
 
 // Who happen when we switched the Select
 const switchMode = () => {
@@ -104,38 +126,34 @@ const whichDayIsIt = (day) => {
   return dayString;
 };
 
-// function getWeekStartingSunday(
-//   date = new Date(`${currentYear} ${currentMonth + 1} ${currentDay}`)
-// ) {
-//   let dayOfWeek = date.getDay();
-//   let startOfWeek = new Date(date);
-//   startOfWeek.setDate(date.getDate() - dayOfWeek);
-//   let weekNumbers = [];
+// - Bug June 2025 finish week on 28 and the next week starts in 1, when should be 29 and 30.
 
-//   let sunday = startOfWeek.getDate();
-
-//   for (let i = 0; i < 7; i++) {
-//     weekNumbers.push(sunday + i);
-//   }
-
-//   return weekNumbers;
-// }
 function getWeekStartingSunday(
   date = new Date(currentYear, currentMonth, currentDay)
 ) {
+  let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  let daysInLastMonth = new Date(currentYear, currentMonth, 0).getDate();
+
   let dayOfWeek = date.getDay();
   let startOfWeek = new Date(date);
-  startOfWeek.setDate(date.getDate() - dayOfWeek);
 
-  // Si la semana comienza en el mes anterior, ajustamos el mes
+  startOfWeek.setDate(date.getDate() - dayOfWeek);
+  console.log(startOfWeek);
+  let endDate = date.getDate() - dayOfWeek + 6;
+
   if (startOfWeek.getMonth() !== currentMonth) {
     startOfWeek.setMonth(currentMonth);
-    startOfWeek.setDate(1); // Comenzamos desde el primer día del mes actual
-  }
+    startOfWeek.setDate(1);
+    if (currentDay < 4) {
+      startOfWeek.setMonth(currentMonth - 1);
+      startOfWeek.setDate(daysInLastMonth - currentDay + 2);
+    }
+  } // Comprobar si funciona  a largo plazo
 
   let weekNumbers = [];
   for (let i = 0; i < 7; i++) {
     let day = new Date(startOfWeek);
+
     day.setDate(startOfWeek.getDate() + i);
     weekNumbers.push({
       day: day.getDate(),
@@ -143,143 +161,66 @@ function getWeekStartingSunday(
       year: day.getFullYear(),
     });
   }
+
+  console.log(endDate, daysInLastMonth, currentDay, daysInMonth);
+
   return weekNumbers;
 }
+
 function generateWeek() {
   calendarWeeklyDays.innerHTML = "";
   let currentWeek = getWeekStartingSunday();
-  console.log(getWeekStartingSunday());
+  console.log(...currentWeek);
+
+  const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   for (let i = 0; i < currentWeek.length; i++) {
     let dayDiv = document.createElement("div");
     let dayObj = currentWeek[i];
-    dayDiv.innerHTML = `${whichDayIsIt(i)} ${addZeroToNumber(dayObj.day)}`;
+    dayDiv.innerHTML = `${
+      dayNames[i]
+    }<p class="calendar-weekly_day_number_p">${addZeroToNumber(
+      dayObj.day
+    )}</p>`;
     dayDiv.classList.add("calendar-weekly_day_number");
     calendarWeeklyDays.appendChild(dayDiv);
   }
 
-  // Mostramos el rango de la semana
   let startDate = currentWeek[0];
   let endDate = currentWeek[currentWeek.length - 1];
   weekCalendarOnWeek.innerText = `${addZeroToNumber(
     startDate.day
-  )} - ${addZeroToNumber(endDate.day)}`;
+  )} - ${addZeroToNumber(endDate.day)}       ${addZeroToNumber(
+    currentMonth + 1
+  )} / ${currentYear}`;
 }
-// function generateWeek() {
-//   day = currentDay;
-//   calendarWeeklyDays.innerHTML = "";
-
-//   let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-//   let currentWeek = getWeekStartingSunday();
-//   console.log(currentDay, currentWeek);
-//   if (currentWeek.includes(daysInMonth + 1)) {
-//     for (let i = 0; i < currentWeek.length; i++) {
-//       if (currentWeek[i] > daysInMonth) {
-//         currentWeek[i] = 1;
-//       }
-//     }
-//   }
-
-//   for (let i = 0; i < 1; i++) {
-//     for (let j = 0; j < 7; j++) {
-//       let dayDiv = document.createElement("div");
-//       switch (j) {
-//         case (j = 0):
-//           dayDiv.innerHTML = `<p class="calendar-weekly_day_number_p">Sun</p><p class="calendar-weekly_day_number_p">${addZeroToNumber(
-//             currentWeek[0]
-//           )}</p>`;
-//           break;
-//         case (j = 1):
-//           dayDiv.innerHTML = `<p class="calendar-weekly_day_number_p">Mon</p><p class="calendar-weekly_day_number_p">${addZeroToNumber(
-//             currentWeek[1]
-//           )}</p>`;
-//           break;
-//         case (j = 2):
-//           dayDiv.innerHTML = `<p class="calendar-weekly_day_number_p">Tue</p><p class="calendar-weekly_day_number_p">${addZeroToNumber(
-//             currentWeek[2]
-//           )}</p>`;
-//           break;
-//         case (j = 3):
-//           dayDiv.innerHTML = `<p class="calendar-weekly_day_number_p">Wed</p><p class="calendar-weekly_day_number_p">${addZeroToNumber(
-//             currentWeek[3]
-//           )}</p>`;
-//           break;
-//         case (j = 4):
-//           dayDiv.innerHTML = `<p class="calendar-weekly_day_number_p">Thu</p><p class="calendar-weekly_day_number_p">${addZeroToNumber(
-//             currentWeek[4]
-//           )}</p>`;
-//           break;
-//         case (j = 5):
-//           dayDiv.innerHTML = `<p class="calendar-weekly_day_number_p">Fri</p><p class="calendar-weekly_day_number_p">${addZeroToNumber(
-//             currentWeek[5]
-//           )}</p>`;
-//           break;
-//         case (j = 6):
-//           dayDiv.innerHTML = `<p class="calendar-weekly_day_number_p">Sat</p><p class="calendar-weekly_day_number_p">${addZeroToNumber(
-//             currentWeek[6]
-//           )}</p>`;
-//           break;
-//       }
-//       dayDiv.classList.add("calendar-weekly_day_number");
-//       calendarWeeklyDays.appendChild(dayDiv);
-//       day++;
-//     }
-//   }
-//   weekCalendarOnWeek.innerText = `${addZeroToNumber(
-//     currentWeek[0]
-//   )} to ${addZeroToNumber(currentWeek[6])}`;
-// }
 
 arrowBackCalendar.addEventListener("click", generateWeek);
 arrowNextCalendar.addEventListener("click", generateWeek);
 
 function changeWeek(offset) {
-  currentDay += offset; // Cambiamos de semana
-
+  currentDay += offset;
   let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
   let daysInLastMonth = new Date(currentYear, currentMonth, 0).getDate();
-
   if (currentDay < 1) {
     currentMonth--;
     if (currentMonth < 0) {
       currentMonth = 11;
       currentYear--;
     }
-    currentDay = daysInLastMonth + currentDay; // Ajustamos el día
+    currentDay = daysInLastMonth + currentDay;
   } else if (currentDay > daysInMonth) {
     currentMonth++;
     if (currentMonth > 11) {
       currentMonth = 0;
       currentYear++;
     }
-    currentDay = currentDay - daysInMonth; // Ajustamos el día
+    currentDay = currentDay - daysInMonth;
   }
 
   actualizeMonth();
   generateWeek();
 }
-// function changeWeek(offset) {
-//   let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-//   let daysInLastMonth = new Date(currentYear, currentMonth, 0).getDate();
-//   currentDay += offset;
-
-//   if (currentDay < 1) {
-//     currentMonth--;
-//     currentDay = daysInLastMonth;
-//   } else if (currentDay > daysInMonth) {
-//     currentMonth++;
-//     currentDay = 1;
-//   }
-//   if (currentMonth < 0) {
-//     currentMonth = 11;
-//     currentYear--;
-//   } else if (currentMonth > 11) {
-//     currentMonth = 0;
-//     currentYear++;
-//   }
-//   actualizeMonth();
-//   generateWeek();
-// }
 
 // Fuction to actualize the day
 function generateAgend() {
@@ -380,6 +321,8 @@ function changeMonth(offset) {
 function initApp() {
   actualizeMonth();
   generateCalendar(currentMonth, currentYear);
+
+  lucideMoon.classList.add("hidden");
 }
 
 document.addEventListener("DOMContentLoaded", initApp);

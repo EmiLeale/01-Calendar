@@ -17,6 +17,14 @@ const lucideMoon = document.getElementById("lucide-moon");
 const lucideSun = document.getElementById("lucide-sun");
 const link = document.getElementById("theme");
 const switchTheme = document.getElementById("switch-theme");
+const newDayActivity = document.getElementById("new-day-activity");
+const saveTask = document.getElementById("save-task");
+const closeTask = document.getElementById("close-task");
+const placeActivity = document.getElementById("place-activity");
+const newActivity = document.getElementById("new-activity");
+const saveActivity = document.getElementById("save-activity");
+
+let dateTimeTask = document.getElementById("datetime-local");
 
 let currentDate = new Date();
 let currentDay = currentDate.getDate();
@@ -25,6 +33,25 @@ let currentYear = currentDate.getFullYear();
 let dayString;
 
 console.log(currentDate);
+
+function createActivity() {
+  newActivity.classList.toggle("hidden");
+  let activity = {
+    name: newActivity.querySelector("input").value,
+    description: newActivity.querySelector("textarea").value,
+    color: newActivity.querySelector("div").querySelector("input[type=color]")
+      .value,
+  };
+  saveActivity.addEventListener("click", () => {
+    if (activity.name === "" && activity.description === "") {
+      window.alert("Please enter a title and a description");
+    } else {
+      localStorage.removeItem("name", activity.name);
+    }
+  });
+  console.log(localStorage);
+}
+placeActivity.addEventListener("click", createActivity);
 
 // //Switch the theme of the page
 // function changeTheme() {
@@ -218,11 +245,16 @@ function generateYear() {
       dayButton.classList.add("calendar-yearly_month_day");
       dayButton.innerText = `${day}`;
       monthDaysContainer.appendChild(dayButton);
-
+      dayButton.addEventListener("click", () => {
+        currentDay = day;
+        currentMonth = i;
+        openNewTask();
+      });
       dayButton.addEventListener("dblclick", () => {
-        currentDate = new Date(currentYear, i, day, 0).getDate();
-        currentMonth = new Date(currentYear, i + 1, day, 0).getMonth();
-        currentYear = new Date(currentYear, i, day, 0).getFullYear();
+        let newDate = new Date(currentYear, i + 1, day, 0);
+        currentDate = newDate;
+        currentMonth = newDate.getMonth();
+        currentYear = newDate.getFullYear();
         currentDay = day;
         infoSelect.innerText = `${addZeroToNumber(
           currentMonth
@@ -275,7 +307,10 @@ function generateWeek() {
     )}</p>`;
     dayDiv.classList.add("calendar-weekly_day_number");
     calendarWeeklyDays.appendChild(dayDiv);
-
+    dayDiv.addEventListener("click", () => {
+      currentDay = dayObj.day;
+      openNewTask();
+    });
     dayDiv.addEventListener("dblclick", () => {
       currentDate = new Date(
         dayObj.year,
@@ -315,8 +350,8 @@ function generateWeek() {
     currentMonth + 1
   )} / ${currentYear}`;
 }
-arrowBackCalendar.addEventListener("click", generateWeek);
-arrowNextCalendar.addEventListener("click", generateWeek);
+arrowBackCalendar.addEventListener("click", changeWeek(-7));
+arrowNextCalendar.addEventListener("click", changeWeek(7));
 function changeWeek(offset) {
   currentDay += offset;
   let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
@@ -379,7 +414,6 @@ function changeDay(offset) {
     currentMonth = 0;
     currentYear++;
   }
-  console.log(currentDay);
   actualizeMonth();
   generateAgend();
 }
@@ -411,6 +445,11 @@ function generateCalendar(currentMonth, currentYear) {
         beforeDays.classList.add("calendar-monthly_day_number_out-of-month");
         daysContainer.appendChild(beforeDays);
         lastMonthStart++;
+        beforeDays.addEventListener("click", () => {
+          currentDay = Number(beforeDays.firstElementChild.innerHTML);
+          changeMonth(-1);
+          openNewTask();
+        });
         beforeDays.addEventListener("dblclick", () => {
           currentDay = Number(beforeDays.firstElementChild.innerHTML);
           currentDate = new Date(currentYear, currentMonth - 1, currentDay, 0);
@@ -428,6 +467,10 @@ function generateCalendar(currentMonth, currentYear) {
         dayDiv.classList.add("calendar-monthly_day_number");
         daysContainer.appendChild(dayDiv);
         day++;
+        dayDiv.addEventListener("click", () => {
+          currentDay = Number(dayDiv.firstElementChild.innerHTML);
+          openNewTask();
+        });
         dayDiv.addEventListener("dblclick", () => {
           currentDay = Number(dayDiv.firstElementChild.innerHTML);
           currentDate = new Date(currentYear, currentMonth, currentDay, 0);
@@ -445,6 +488,11 @@ function generateCalendar(currentMonth, currentYear) {
         afterDays.classList.add("calendar-monthly_day_number_out-of-month");
         daysContainer.appendChild(afterDays);
         dayInNexMonth++;
+        afterDays.addEventListener("click", () => {
+          currentDay = Number(afterDays.firstElementChild.innerHTML);
+          changeMonth(1);
+          openNewTask();
+        });
         afterDays.addEventListener("dblclick", () => {
           currentDay = Number(afterDays.firstElementChild.innerHTML);
           currentDate = new Date(currentYear, currentMonth, currentDay, 0);
@@ -463,10 +511,11 @@ function generateCalendar(currentMonth, currentYear) {
 
 // Function to change the month and/or year
 function changeMonth(offset) {
-  if (selectMode.value === "Year") {
-    currentYear += offset;
-    generateYear();
-  } else {
+  if (
+    selectMode.value === "Day" ||
+    selectMode.value === "Month" ||
+    selectMode.value === "Week"
+  ) {
     currentMonth += offset;
     if (currentMonth < 0) {
       currentMonth = 11;
@@ -476,9 +525,28 @@ function changeMonth(offset) {
       currentYear++;
     }
     actualizeMonth();
+  } else if (selectMode.value === "Year") {
+    currentYear = Number(infoSelect.innerText);
+    currentYear += offset;
+    generateYear();
+    return;
   }
-
   generateCalendar(currentMonth, currentYear);
+}
+
+function openNewTask() {
+  newDayActivity.classList.remove("hidden");
+  dateTimeTask.value = `${currentYear}-${addZeroToNumber(
+    currentMonth + 1
+  )}-${addZeroToNumber(currentDay)}`;
+
+  saveTask.addEventListener("submit", () => {
+    newDayActivity.classList.add("hidden");
+  });
+
+  closeTask.addEventListener("click", () => {
+    newDayActivity.classList.add("hidden");
+  });
 }
 
 function initApp() {

@@ -8,9 +8,6 @@
     
 </head>
 <body>
-    <button id="switch-theme"><svg id="lucide-moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><svg id="lucide-sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></button>
-
-    <section class="calendar"> 
         <!-- 01/02/2025 1hr: Structure Calendar on HTML and give it some styling !-->
         <!-- 05/02/2025 2hrs: Styling CSS and start to build Javascript !-->
         <!-- 06/02/2025 3hrs: Continue build Javascript !-->
@@ -21,12 +18,14 @@
         <!-- 13/02/2025 2.5hrs: Continue grow JS and reforme button Switch night mode !-->
         <!-- 14/02/2025 2hrs: Reforme some fuctions !-->
         <!-- 16/02/2025 4hrs: Add function buttons when click on a day !-->
-        <!-- 17/02/2025 4hrs: Finish .js calendar !-->
-        
-        
+        <!-- 17/02/2025 7.5hrs: Finish .js calendar, add pop up day task !-->
+
+    <button id="switch-theme"><svg id="lucide-moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><svg id="lucide-sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></button>
+
+    <section class="calendar">
         <div class="switch-calendar">
             <button id="arrow-back" onclick="changeMonth(-1)"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg></button>
-            <p id="info-select">Month</p>
+            <p id="info-select"></p>
             <button id="arrow-next" onclick="changeMonth(1)"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg></button>
             <select class="switch-calendar_change-view" id="switch-mode">
                 <option>Month</option>
@@ -77,7 +76,58 @@
             
         </div>
             
+        <form id="new-day-activity" class="hidden">
+            
+            <select >
+                <option value="" disabled selected>Select your option</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
+            <input type="date" id="datetime-local" value="">
+            <div>
+                <input type="color">
+                <input type="submit" value="Save" class="save-activity" id="save-task">
+                <button><svg id="close-task" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+            </div>
+            
+        </form>
+    </section>
+
+    <section class="activity">
+        <div class="activity_title">
+            <h3>Activity</h3>
+            <button id="place-activity"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-plus"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg></button>
         </div>
+        <div class="activity_activities">
+            <div class="activity_activities_individual">
+                <input type="checkbox" id="checkbox"><label class="activity_name-of-activity" for="checkbox"> Name of activity</label>
+            </div>
+            <div class="activity_activities_individual">
+                <input type="checkbox" id="checkbox1"><label class="activity_name-of-activity" for="checkbox1"> Name of activity</label>
+            </div>
+            <div class="activity_activities_individual">
+                <input type="checkbox" id="checkbox2"><label class="activity_name-of-activity" for="checkbox2"> Name of activity</label>
+            </div>
+            <div class="activity_activities_individual">
+                <input type="checkbox" id="checkbox3"><label class="activity_name-of-activity" for="checkbox3"> Name of activity</label>
+            </div>
+            <div class="activity_activities_individual">
+                <input type="checkbox" id="checkbox4"><label class="activity_name-of-activity" for="checkbox4"> Name of activity</label>
+            </div>
+        </div>
+        <div class="activity_new-activity" >
+            <form id="new-activity" class="hidden">
+                <input type="text" maxlength="20" placeholder="Activity">
+                <textarea placeholder="Description" maxlength="80"></textarea>
+                <div>
+                    <input type="color">
+                    <input type="submit" value="Save" class="save-activity" id="save-activity">
+                </div>
+                
+            </form>
+            
+        </div>
+        
     </section>
     <script src="script.js"></script>
 </body>

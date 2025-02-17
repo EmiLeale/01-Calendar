@@ -38,13 +38,14 @@ input::-moz-focus-inner {
 }
 body {
   width: 100%;
-
   background-color: var(--background-night);
+  display: flex;
 }
 button {
   height: 100%;
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 
 #switch-theme {
@@ -75,7 +76,8 @@ button {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 5rem 1rem;
+  margin: 5rem;
+  position: relative;
 }
 
 .calendar svg {
@@ -314,6 +316,36 @@ select option {
   transition: all 0.5s cubic-bezier(0.52, 0.38, 0.95, 0.8);
 }
 
+/* NEW TASK */
+#new-day-activity {
+  height: fit-content;
+  width: fit-content;
+  position: absolute;
+  left: middle;
+  top: middle;
+  border-radius: 1rem;
+  padding: 1rem;
+  background-color: var(--day2);
+  display: flex;
+  flex-direction: column;
+}
+#new-day-activity select,
+#new-day-activity #datetime-local {
+  width: 100%;
+  height: 2rem;
+  text-align: center;
+  outline: none;
+}
+#new-day-activity button,
+#new-day-activity button svg {
+  outline: none;
+  border: none;
+  stroke: var(--background-day);
+}
+#new-day-activity button:hover,
+#new-day-activity button:hover svg {
+  background-color: var(--background-night);
+}
 /* ACTIVITY SECTION */
 .activity {
   height: fit-content;
@@ -321,6 +353,7 @@ select option {
   background-color: var(--day3);
   padding: 1rem;
   border-radius: 1rem;
+  align-self: center;
 }
 
 .activity_title {
@@ -368,7 +401,8 @@ select option {
   flex-direction: column;
   justify-content: center;
 }
-.activity_new-activity form * {
+.activity_new-activity form *,
+#new-day-activity * {
   margin: 0.3rem 0;
   font-size: 0.9rem;
   border: 1px solid var(--background-night);
@@ -382,7 +416,8 @@ select option {
 }
 .activity_new-activity form textarea {
   max-width: 100%;
-  height: 5rem;
+  min-width: 100%;
+  min-height: 5rem;
   max-height: 10rem;
   background-color: var(--background-night);
   outline: 1px solid transparent;
@@ -395,29 +430,37 @@ select option {
 .activity_new-activity form input {
   padding: 0.3rem;
 }
-.activity_new-activity form div {
+.activity_new-activity form div,
+#new-day-activity div {
   display: flex;
   justify-content: space-around;
   border: none;
+  align-items: center;
 }
-.activity_new-activity form div input:first-of-type {
+.activity_new-activity #new-activity input:first-of-type,
+#new-day-activity div input:first-of-type {
   border: none;
   outline: none;
+  height: 2rem;
 }
-.activity_new-activity form div input {
+.activity_new-activity form div input,
+#new-day-activity div input:first-of-type {
   width: 30%;
   margin: 0;
   padding: 0;
   background-color: transparent;
 }
-.activity_new-activity form .save-activity {
+.activity_new-activity form .save-activity,
+#new-day-activity div .save-activity {
   width: 50%;
+  height: 2rem;
   border-radius: 1rem;
   align-self: center;
   text-align: center;
   cursor: pointer;
   transition: background-color 0.2s cubic-bezier(0.52, 0.38, 0.95, 0.8);
 }
-.activity_new-activity form .save-activity:hover {
+.activity_new-activity form .save-activity:hover,
+#new-day-activity .save-activity:hover {
   background-color: var(--background-night);
 }

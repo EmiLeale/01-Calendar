@@ -22,8 +22,9 @@ let currentDate = new Date();
 let currentDay = currentDate.getDate();
 let currentMonth = currentDate.getMonth();
 let currentYear = currentDate.getFullYear();
-console.log(currentDate);
 let dayString;
+
+console.log(currentDate);
 
 // //Switch the theme of the page
 // function changeTheme() {
@@ -60,7 +61,6 @@ const switchMode = () => {
       calendarDaily.classList.add("hidden");
       calendarYearly.classList.add("hidden");
       actualizeMonth();
-
       generateWeek();
       break;
     case "Year":
@@ -68,8 +68,7 @@ const switchMode = () => {
       calendarMonthly.classList.add("hidden");
       calendarWeekly.classList.add("hidden");
       calendarDaily.classList.add("hidden");
-      infoSelect.innerText = `${currentYear}`;
-
+      generateYear();
       break;
     default:
       calendarMonthly.classList.remove("hidden");
@@ -125,30 +124,126 @@ const whichDayIsIt = (day) => {
   }
   return dayString;
 };
+// Function for pass the month and obtain a number
+const whichMonthIsIt = (month) => {
+  switch (month) {
+    case "January":
+      month = 1;
+      break;
+    case "February":
+      month = 2;
+      break;
+    case "March":
+      month = 3;
+      break;
+    case "April":
+      month = 4;
+      break;
+    case "May":
+      month = 5;
+      break;
+    case "June":
+      month = 6;
+      break;
+    case "July":
+      month = 7;
+      break;
+    case "August":
+      month = 8;
+      break;
+    case "September":
+      month = 9;
+      break;
+    case "October":
+      month = 10;
+      break;
+    case "November":
+      month = 11;
+      break;
+    case "December":
+      month = 12;
+      break;
+  }
+  return month;
+};
 
-// - Bug June 2025 finish week on 28 and the next week starts in 1, when should be 29 and 30.
+// Function to Generate de Yearly calendar
+function generateYear() {
+  infoSelect.innerText = `${currentYear}`;
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
 
+  let daysInMonth = months.map((month, index) => {
+    return new Date(currentYear, index + 1, 0).getDate();
+  });
+
+  calendarYearly.innerHTML = "";
+
+  for (let i = 0; i < months.length; i++) {
+    let monthDiv = document.createElement("div");
+    monthDiv.classList.add("calendar-yearly_month_container");
+    calendarYearly.appendChild(monthDiv);
+
+    let h3 = document.createElement("h3");
+    h3.innerText = `${months[i]}`;
+    monthDiv.appendChild(h3);
+
+    let monthDaysContainer = document.createElement("div");
+    monthDaysContainer.classList.add("calendar-yearly_month");
+    monthDiv.appendChild(monthDaysContainer);
+
+    let firstDayOfWeek = new Date(currentYear, i, 1).getDay();
+
+    for (let k = 0; k < firstDayOfWeek; k++) {
+      let emptyCell = document.createElement("button");
+      emptyCell.classList.add("calendar-yearly_month_day", "empty");
+      monthDaysContainer.appendChild(emptyCell);
+    }
+
+    for (let j = 0; j < daysInMonth[i]; j++) {
+      let day = j + 1;
+      let dayButton = document.createElement("button");
+      dayButton.classList.add("calendar-yearly_month_day");
+      dayButton.innerText = `${day}`;
+      monthDaysContainer.appendChild(dayButton);
+
+      dayButton.addEventListener("dblclick", () => {
+        currentDate = new Date(currentYear, i, day, 0).getDate();
+        currentMonth = new Date(currentYear, i + 1, day, 0).getMonth();
+        currentYear = new Date(currentYear, i, day, 0).getFullYear();
+        currentDay = day;
+        infoSelect.innerText = `${addZeroToNumber(
+          currentMonth
+        )} / ${currentYear}`;
+        calendarDaily.classList.remove("hidden");
+        calendarYearly.classList.add("hidden");
+        generateAgend(currentDay);
+        selectMode.value = "Day";
+      });
+    }
+  }
+}
+
+// Functions to actualize Weekly Calendar
 function getWeekStartingSunday(
   date = new Date(currentYear, currentMonth, currentDay)
 ) {
-  let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-  let daysInLastMonth = new Date(currentYear, currentMonth, 0).getDate();
-
   let dayOfWeek = date.getDay();
   let startOfWeek = new Date(date);
 
   startOfWeek.setDate(date.getDate() - dayOfWeek);
-  console.log(startOfWeek);
-  let endDate = date.getDate() - dayOfWeek + 6;
-
-  if (startOfWeek.getMonth() !== currentMonth) {
-    startOfWeek.setMonth(currentMonth);
-    startOfWeek.setDate(1);
-    if (currentDay < 4) {
-      startOfWeek.setMonth(currentMonth - 1);
-      startOfWeek.setDate(daysInLastMonth - currentDay + 2);
-    }
-  } // Comprobar si funciona  a largo plazo
 
   let weekNumbers = [];
   for (let i = 0; i < 7; i++) {
@@ -157,26 +252,22 @@ function getWeekStartingSunday(
     day.setDate(startOfWeek.getDate() + i);
     weekNumbers.push({
       day: day.getDate(),
-      month: day.getMonth() + 1,
+      month: day.getMonth(),
       year: day.getFullYear(),
     });
   }
 
-  console.log(endDate, daysInLastMonth, currentDay, daysInMonth);
-
   return weekNumbers;
 }
-
 function generateWeek() {
   calendarWeeklyDays.innerHTML = "";
   let currentWeek = getWeekStartingSunday();
-  console.log(...currentWeek);
-
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   for (let i = 0; i < currentWeek.length; i++) {
-    let dayDiv = document.createElement("div");
+    let dayDiv = document.createElement("button");
     let dayObj = currentWeek[i];
+
     dayDiv.innerHTML = `${
       dayNames[i]
     }<p class="calendar-weekly_day_number_p">${addZeroToNumber(
@@ -184,6 +275,36 @@ function generateWeek() {
     )}</p>`;
     dayDiv.classList.add("calendar-weekly_day_number");
     calendarWeeklyDays.appendChild(dayDiv);
+
+    dayDiv.addEventListener("dblclick", () => {
+      currentDate = new Date(
+        dayObj.year,
+        dayObj.month,
+        dayObj.day,
+        0
+      ).getDate();
+
+      currentMonth = new Date(
+        dayObj.year,
+        dayObj.month,
+        dayObj.day,
+        0
+      ).getMonth();
+      currentYear = new Date(
+        dayObj.year,
+        dayObj.month,
+        dayObj.day,
+        0
+      ).getFullYear();
+      infoSelect.innerText = `${addZeroToNumber(
+        currentMonth + 1
+      )} / ${currentYear}`;
+      calendarDaily.classList.remove("hidden");
+      calendarWeekly.classList.add("hidden");
+      currentDay = dayObj.day;
+      generateAgend(dayObj.day);
+      selectMode.value = "Day";
+    });
   }
 
   let startDate = currentWeek[0];
@@ -194,10 +315,8 @@ function generateWeek() {
     currentMonth + 1
   )} / ${currentYear}`;
 }
-
 arrowBackCalendar.addEventListener("click", generateWeek);
 arrowNextCalendar.addEventListener("click", generateWeek);
-
 function changeWeek(offset) {
   currentDay += offset;
   let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
@@ -223,17 +342,19 @@ function changeWeek(offset) {
 }
 
 // Fuction to actualize the day
-function generateAgend() {
+function generateAgend(day) {
   let actualDate = infoSelect.innerHTML;
-  let actualMonth = actualDate.replace(/\D/g, "").slice(0, 2);
-  let actualYear = actualDate.replace(/\D/g, "").slice(2, 7);
+  let actualMonth = Number(actualDate.replace(/\D/g, "").slice(0, 2)) - 1;
+  let actualYear = Number(actualDate.replace(/\D/g, "").slice(2, 7));
   let numberDay = currentDay;
-  let newActualDate = new Date(`${actualYear} ${actualMonth} ${numberDay}`);
+  let newActualDate = new Date(actualYear, actualMonth, numberDay);
   let newCurrenDate = newActualDate.getDay();
-
   dayCalendarOnDaily.innerText = `${whichDayIsIt(
     newCurrenDate
   )} ${addZeroToNumber(numberDay)}`;
+
+  currentMonth = actualMonth;
+  currentYear = actualYear;
 }
 arrowBackCalendar.addEventListener("click", generateAgend);
 arrowNextCalendar.addEventListener("click", generateAgend);
@@ -243,6 +364,7 @@ function changeDay(offset) {
   currentDay += offset;
   let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
   let daysInLastMonth = new Date(currentYear, currentMonth, 0).getDate();
+
   if (currentDay < 1) {
     currentMonth--;
     currentDay = daysInLastMonth;
@@ -257,6 +379,7 @@ function changeDay(offset) {
     currentMonth = 0;
     currentYear++;
   }
+  console.log(currentDay);
   actualizeMonth();
   generateAgend();
 }
@@ -277,51 +400,90 @@ function generateCalendar(currentMonth, currentYear) {
     dayDiv.classList.add("calendar-monthly_day");
     daysContainer.appendChild(dayDiv);
   });
-
   let day = 1;
   let dayInNexMonth = 1;
+
   for (let i = 0; i < 6; i++) {
     for (let j = 0; j < 7; j++) {
       if (i === 0 && j < firstDay) {
-        let beforeDays = document.createElement("div");
+        let beforeDays = document.createElement("button");
         beforeDays.innerHTML = `<p class="calendar-monthly_day_number_p">${lastMonthStart}</p>`;
         beforeDays.classList.add("calendar-monthly_day_number_out-of-month");
         daysContainer.appendChild(beforeDays);
         lastMonthStart++;
+        beforeDays.addEventListener("dblclick", () => {
+          currentDay = Number(beforeDays.firstElementChild.innerHTML);
+          currentDate = new Date(currentYear, currentMonth - 1, currentDay, 0);
+          infoSelect.innerText = `${addZeroToNumber(
+            currentMonth
+          )} / ${currentYear}`;
+          calendarDaily.classList.remove("hidden");
+          calendarMonthly.classList.add("hidden");
+          generateAgend(currentDate.getDate());
+          selectMode.value = "Day";
+        });
       } else if (day <= daysInMonth) {
-        let dayDiv = document.createElement("div");
+        let dayDiv = document.createElement("button");
         dayDiv.innerHTML = `<p class="calendar-monthly_day_number_p">${day}</p>`;
         dayDiv.classList.add("calendar-monthly_day_number");
         daysContainer.appendChild(dayDiv);
         day++;
+        dayDiv.addEventListener("dblclick", () => {
+          currentDay = Number(dayDiv.firstElementChild.innerHTML);
+          currentDate = new Date(currentYear, currentMonth, currentDay, 0);
+          infoSelect.innerText = `${addZeroToNumber(
+            currentMonth + 1
+          )} / ${currentYear}`;
+          calendarDaily.classList.remove("hidden");
+          calendarMonthly.classList.add("hidden");
+          generateAgend(currentDate.getDate());
+          selectMode.value = "Day";
+        });
       } else if (day > daysInMonth) {
-        let afterDays = document.createElement("div");
+        let afterDays = document.createElement("button");
         afterDays.innerHTML = `<p class="calendar-monthly_day_number_p">${dayInNexMonth}</p>`;
         afterDays.classList.add("calendar-monthly_day_number_out-of-month");
         daysContainer.appendChild(afterDays);
         dayInNexMonth++;
+        afterDays.addEventListener("dblclick", () => {
+          currentDay = Number(afterDays.firstElementChild.innerHTML);
+          currentDate = new Date(currentYear, currentMonth, currentDay, 0);
+          infoSelect.innerText = `${addZeroToNumber(
+            currentMonth + 2
+          )} / ${currentYear}`;
+          calendarDaily.classList.remove("hidden");
+          calendarMonthly.classList.add("hidden");
+          generateAgend(currentDate.getDate());
+          selectMode.value = "Day";
+        });
       }
     }
   }
 }
 
+// Function to change the month and/or year
 function changeMonth(offset) {
-  currentMonth += offset;
-  if (currentMonth < 0) {
-    currentMonth = 11;
-    currentYear--;
-  } else if (currentMonth > 11) {
-    currentMonth = 0;
-    currentYear++;
+  if (selectMode.value === "Year") {
+    currentYear += offset;
+    generateYear();
+  } else {
+    currentMonth += offset;
+    if (currentMonth < 0) {
+      currentMonth = 11;
+      currentYear--;
+    } else if (currentMonth > 11) {
+      currentMonth = 0;
+      currentYear++;
+    }
+    actualizeMonth();
   }
-  actualizeMonth();
+
   generateCalendar(currentMonth, currentYear);
 }
 
 function initApp() {
   actualizeMonth();
   generateCalendar(currentMonth, currentYear);
-
   lucideMoon.classList.add("hidden");
 }
 

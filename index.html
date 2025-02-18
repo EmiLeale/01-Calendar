@@ -19,6 +19,7 @@
         <!-- 14/02/2025 2hrs: Reforme some fuctions !-->
         <!-- 16/02/2025 4hrs: Add function buttons when click on a day !-->
         <!-- 17/02/2025 7.5hrs: Finish .js calendar, add pop up day task !-->
+        <!-- 18/02/2025 4hrs: Add function to Activities and popUp !-->
 
     <button id="switch-theme"><svg id="lucide-moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><svg id="lucide-sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></button>
 
@@ -47,7 +48,7 @@
             <div class="calendar-weekly_day" id="calendar-weekly_day">
             </div>
         </div>
-        
+        <!-- <p class="calendar_day_datos">Datos</p><p class="calendar_day_datos">Datos</p> -->
         <div class="calendar-day hidden" id="calendar-day"><!-- Day calendar --> 
             <div class="calendar-day_day">
                 <button id="arrow-back-daily" onclick="changeDay(-1)"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg></button>
@@ -57,7 +58,7 @@
             </div>
             <div class="calendar-day_horarios">
                 <div class="calendar-day_horarios_horarios"><span>6hs</span><span>10hs</span><span>14hs</span><span>18hs</span><span>20hs</span></div>
-                <div class="calendar-day_horarios_2hs"><p class="calendar_day_datos">Datos</p><p class="calendar_day_datos">Datos</p></div>
+                <div class="calendar-day_horarios_2hs"></div>
                 <div class="calendar-day_horarios_2hs"></div>
                 <div class="calendar-day_horarios_2hs"></div>
                 <div class="calendar-day_horarios_2hs"></div>
@@ -77,11 +78,8 @@
         </div>
             
         <form id="new-day-activity" class="hidden">
-            
-            <select >
-                <option value="" disabled selected>Select your option</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
+            <select>
+                <option value="" disabled selected>Please create activities</option>
             </select>
             <input type="date" id="datetime-local" value="">
             <div>
@@ -98,22 +96,8 @@
             <h3>Activity</h3>
             <button id="place-activity"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-plus"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg></button>
         </div>
-        <div class="activity_activities">
-            <div class="activity_activities_individual">
-                <input type="checkbox" id="checkbox"><label class="activity_name-of-activity" for="checkbox"> Name of activity</label>
-            </div>
-            <div class="activity_activities_individual">
-                <input type="checkbox" id="checkbox1"><label class="activity_name-of-activity" for="checkbox1"> Name of activity</label>
-            </div>
-            <div class="activity_activities_individual">
-                <input type="checkbox" id="checkbox2"><label class="activity_name-of-activity" for="checkbox2"> Name of activity</label>
-            </div>
-            <div class="activity_activities_individual">
-                <input type="checkbox" id="checkbox3"><label class="activity_name-of-activity" for="checkbox3"> Name of activity</label>
-            </div>
-            <div class="activity_activities_individual">
-                <input type="checkbox" id="checkbox4"><label class="activity_name-of-activity" for="checkbox4"> Name of activity</label>
-            </div>
+        <div class="activity_activities hidden" id="see-activities">
+            
         </div>
         <div class="activity_new-activity" >
             <form id="new-activity" class="hidden">

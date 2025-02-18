@@ -23,9 +23,9 @@ const closeTask = document.getElementById("close-task");
 const placeActivity = document.getElementById("place-activity");
 const newActivity = document.getElementById("new-activity");
 const saveActivity = document.getElementById("save-activity");
+const activitiesContainer = document.getElementById("see-activities");
 
 let dateTimeTask = document.getElementById("datetime-local");
-
 let currentDate = new Date();
 let currentDay = currentDate.getDate();
 let currentMonth = currentDate.getMonth();
@@ -34,24 +34,80 @@ let dayString;
 
 console.log(currentDate);
 
+let activities = JSON.parse(localStorage.getItem("activities")) || [];
+
 function createActivity() {
   newActivity.classList.toggle("hidden");
-  let activity = {
-    name: newActivity.querySelector("input").value,
-    description: newActivity.querySelector("textarea").value,
-    color: newActivity.querySelector("div").querySelector("input[type=color]")
-      .value,
-  };
-  saveActivity.addEventListener("click", () => {
-    if (activity.name === "" && activity.description === "") {
+  saveActivity.onclick = () => {
+    event.preventDefault();
+    let activity = {
+      name: newActivity.querySelector("input").value.trim(),
+      description: newActivity.querySelector("textarea").value.trim(),
+      color: newActivity.querySelector("div input[type=color]").value,
+    };
+    if (activity.name === "" || activity.description === "") {
       window.alert("Please enter a title and a description");
-    } else {
-      localStorage.removeItem("name", activity.name);
+      return;
     }
-  });
-  console.log(localStorage);
+    activities.push(activity);
+    localStorage.setItem("activities", JSON.stringify(activities));
+    loadActivities();
+    newActivity.querySelector("input").value = "";
+    newActivity.querySelector("div input[type=color]").value = "#000000";
+    newActivity.querySelector("textarea").value = "";
+  };
 }
 placeActivity.addEventListener("click", createActivity);
+const selectActivity = document.querySelector("#new-day-activity select");
+
+function loadActivities() {
+  let activities = JSON.parse(localStorage.getItem("activities")) || [];
+  activitiesContainer.classList.remove("hidden");
+  activitiesContainer.innerHTML = ``;
+  selectActivity.innerHTML = `<option value="" disabled selected>Select activity</option>`;
+
+  activities.forEach((activity, i) => {
+    divTask = document.createElement("div");
+    activitiesContainer.appendChild(divTask);
+    divTask.classList.add("activity_activities_individual");
+    divTask.innerHTML = `<input type="checkbox" id="checkbox${i}"><label class="activity_name-of-activity" for="checkbox${i}">${activities[i].name}</label>`;
+
+    option = document.createElement("option");
+    selectActivity.appendChild(option);
+    option.id = `activity${i}`;
+    option.innerHTML = `<option value="${i}">${activities[i].name}</option>`;
+  });
+}
+
+function openNewTask() {
+  newDayActivity.classList.remove("hidden");
+
+  dateTimeTask.value = `${currentYear}-${addZeroToNumber(
+    currentMonth + 1
+  )}-${addZeroToNumber(currentDay)}`;
+  saveTask.onclick = () => {
+    event.preventDefault();
+    newDayActivity.classList.add("hidden");
+  };
+
+  closeTask.onclick = () => {
+    event.preventDefault();
+    newDayActivity.classList.add("hidden");
+  };
+
+  selectActivity.onchange = () => {
+    if (selectActivity.value !== "") {
+      activities.forEach((activity) => {
+        currentSelect =
+          selectActivity.options[selectActivity.selectedIndex].text;
+        if (currentSelect === activity.name) {
+          newDayActivity.querySelector("div input[type=color]").value =
+            activity.color;
+        }
+      });
+    }
+  };
+}
 
 // //Switch the theme of the page
 // function changeTheme() {
@@ -79,6 +135,7 @@ const switchMode = () => {
       calendarMonthly.classList.add("hidden");
       calendarWeekly.classList.add("hidden");
       calendarYearly.classList.add("hidden");
+      newDayActivity.classList.add("hidden");
       actualizeMonth();
       generateAgend();
       break;
@@ -87,6 +144,7 @@ const switchMode = () => {
       calendarMonthly.classList.add("hidden");
       calendarDaily.classList.add("hidden");
       calendarYearly.classList.add("hidden");
+      newDayActivity.classList.add("hidden");
       actualizeMonth();
       generateWeek();
       break;
@@ -95,6 +153,7 @@ const switchMode = () => {
       calendarMonthly.classList.add("hidden");
       calendarWeekly.classList.add("hidden");
       calendarDaily.classList.add("hidden");
+      newDayActivity.classList.add("hidden");
       generateYear();
       break;
     default:
@@ -102,6 +161,7 @@ const switchMode = () => {
       calendarDaily.classList.add("hidden");
       calendarWeekly.classList.add("hidden");
       calendarYearly.classList.add("hidden");
+      newDayActivity.classList.add("hidden");
       actualizeMonth();
       generateCalendar(currentMonth, currentYear);
   }
@@ -245,25 +305,39 @@ function generateYear() {
       dayButton.classList.add("calendar-yearly_month_day");
       dayButton.innerText = `${day}`;
       monthDaysContainer.appendChild(dayButton);
-      dayButton.addEventListener("click", () => {
-        currentDay = day;
-        currentMonth = i;
-        openNewTask();
-      });
-      dayButton.addEventListener("dblclick", () => {
-        let newDate = new Date(currentYear, i + 1, day, 0);
-        currentDate = newDate;
-        currentMonth = newDate.getMonth();
-        currentYear = newDate.getFullYear();
-        currentDay = day;
-        infoSelect.innerText = `${addZeroToNumber(
-          currentMonth
-        )} / ${currentYear}`;
-        calendarDaily.classList.remove("hidden");
-        calendarYearly.classList.add("hidden");
-        generateAgend(currentDay);
-        selectMode.value = "Day";
-      });
+      let clickCount = 0;
+      dayButton.onclick = () => {
+        event.preventDefault();
+        clickCount++;
+        if (clickCount === 1) {
+          setTimeout(function () {
+            if (clickCount === 1) {
+              currentDay = day;
+              currentMonth = i;
+              openNewTask();
+            }
+            clickCount = 0;
+          }, 250);
+        } else if (clickCount === 2) {
+          clickCount = 0;
+          dayButton.ondblclick = () => {
+            event.preventDefault();
+            let newDate = new Date(currentYear, i + 1, day, 0);
+            currentDate = newDate;
+            currentMonth = newDate.getMonth();
+            currentYear = newDate.getFullYear();
+            currentDay = day;
+            infoSelect.innerText = `${addZeroToNumber(
+              currentMonth
+            )} / ${currentYear}`;
+            calendarDaily.classList.remove("hidden");
+            calendarYearly.classList.add("hidden");
+            generateAgend(currentDay);
+            selectMode.value = "Day";
+            newDayActivity.classList.add("hidden");
+          };
+        }
+      };
     }
   }
 }
@@ -307,39 +381,51 @@ function generateWeek() {
     )}</p>`;
     dayDiv.classList.add("calendar-weekly_day_number");
     calendarWeeklyDays.appendChild(dayDiv);
-    dayDiv.addEventListener("click", () => {
-      currentDay = dayObj.day;
-      openNewTask();
-    });
-    dayDiv.addEventListener("dblclick", () => {
-      currentDate = new Date(
-        dayObj.year,
-        dayObj.month,
-        dayObj.day,
-        0
-      ).getDate();
+    let clickCount = 0;
+    dayDiv.onclick = () => {
+      clickCount++;
+      if (clickCount === 1) {
+        setTimeout(function () {
+          if (clickCount === 1) {
+            currentDay = dayObj.day;
+            openNewTask();
+          }
+          clickCount = 0;
+        }, 250);
+      } else if (clickCount === 2) {
+        clickCount = 0;
+        dayDiv.ondblclick = () => {
+          currentDate = new Date(
+            dayObj.year,
+            dayObj.month,
+            dayObj.day,
+            0
+          ).getDate();
 
-      currentMonth = new Date(
-        dayObj.year,
-        dayObj.month,
-        dayObj.day,
-        0
-      ).getMonth();
-      currentYear = new Date(
-        dayObj.year,
-        dayObj.month,
-        dayObj.day,
-        0
-      ).getFullYear();
-      infoSelect.innerText = `${addZeroToNumber(
-        currentMonth + 1
-      )} / ${currentYear}`;
-      calendarDaily.classList.remove("hidden");
-      calendarWeekly.classList.add("hidden");
-      currentDay = dayObj.day;
-      generateAgend(dayObj.day);
-      selectMode.value = "Day";
-    });
+          currentMonth = new Date(
+            dayObj.year,
+            dayObj.month,
+            dayObj.day,
+            0
+          ).getMonth();
+          currentYear = new Date(
+            dayObj.year,
+            dayObj.month,
+            dayObj.day,
+            0
+          ).getFullYear();
+          infoSelect.innerText = `${addZeroToNumber(
+            currentMonth + 1
+          )} / ${currentYear}`;
+          calendarDaily.classList.remove("hidden");
+          calendarWeekly.classList.add("hidden");
+          currentDay = dayObj.day;
+          generateAgend(dayObj.day);
+          selectMode.value = "Day";
+          newDayActivity.classList.add("hidden");
+        };
+      }
+    };
   }
 
   let startDate = currentWeek[0];
@@ -445,65 +531,55 @@ function generateCalendar(currentMonth, currentYear) {
         beforeDays.classList.add("calendar-monthly_day_number_out-of-month");
         daysContainer.appendChild(beforeDays);
         lastMonthStart++;
-        beforeDays.addEventListener("click", () => {
+        beforeDays.onclick = () => {
           currentDay = Number(beforeDays.firstElementChild.innerHTML);
           changeMonth(-1);
           openNewTask();
-        });
-        beforeDays.addEventListener("dblclick", () => {
-          currentDay = Number(beforeDays.firstElementChild.innerHTML);
-          currentDate = new Date(currentYear, currentMonth - 1, currentDay, 0);
-          infoSelect.innerText = `${addZeroToNumber(
-            currentMonth
-          )} / ${currentYear}`;
-          calendarDaily.classList.remove("hidden");
-          calendarMonthly.classList.add("hidden");
-          generateAgend(currentDate.getDate());
-          selectMode.value = "Day";
-        });
+        };
       } else if (day <= daysInMonth) {
         let dayDiv = document.createElement("button");
         dayDiv.innerHTML = `<p class="calendar-monthly_day_number_p">${day}</p>`;
         dayDiv.classList.add("calendar-monthly_day_number");
         daysContainer.appendChild(dayDiv);
         day++;
-        dayDiv.addEventListener("click", () => {
-          currentDay = Number(dayDiv.firstElementChild.innerHTML);
-          openNewTask();
-        });
-        dayDiv.addEventListener("dblclick", () => {
-          currentDay = Number(dayDiv.firstElementChild.innerHTML);
-          currentDate = new Date(currentYear, currentMonth, currentDay, 0);
-          infoSelect.innerText = `${addZeroToNumber(
-            currentMonth + 1
-          )} / ${currentYear}`;
-          calendarDaily.classList.remove("hidden");
-          calendarMonthly.classList.add("hidden");
-          generateAgend(currentDate.getDate());
-          selectMode.value = "Day";
-        });
+        let clickCount = 0;
+        dayDiv.onclick = () => {
+          clickCount++;
+          if (clickCount === 1) {
+            setTimeout(function () {
+              if (clickCount === 1) {
+                currentDay = Number(dayDiv.firstElementChild.innerHTML);
+                openNewTask();
+              }
+              clickCount = 0;
+            }, 250);
+          } else if (clickCount === 2) {
+            clickCount = 0;
+            dayDiv.ondblclick = () => {
+              currentDay = Number(dayDiv.firstElementChild.innerHTML);
+              currentDate = new Date(currentYear, currentMonth, currentDay, 0);
+              infoSelect.innerText = `${addZeroToNumber(
+                currentMonth + 1
+              )} / ${currentYear}`;
+              calendarDaily.classList.remove("hidden");
+              calendarMonthly.classList.add("hidden");
+              generateAgend(currentDate.getDate());
+              selectMode.value = "Day";
+              newDayActivity.classList.add("hidden");
+            };
+          }
+        };
       } else if (day > daysInMonth) {
         let afterDays = document.createElement("button");
         afterDays.innerHTML = `<p class="calendar-monthly_day_number_p">${dayInNexMonth}</p>`;
         afterDays.classList.add("calendar-monthly_day_number_out-of-month");
         daysContainer.appendChild(afterDays);
         dayInNexMonth++;
-        afterDays.addEventListener("click", () => {
+        afterDays.onclick = () => {
           currentDay = Number(afterDays.firstElementChild.innerHTML);
           changeMonth(1);
           openNewTask();
-        });
-        afterDays.addEventListener("dblclick", () => {
-          currentDay = Number(afterDays.firstElementChild.innerHTML);
-          currentDate = new Date(currentYear, currentMonth, currentDay, 0);
-          infoSelect.innerText = `${addZeroToNumber(
-            currentMonth + 2
-          )} / ${currentYear}`;
-          calendarDaily.classList.remove("hidden");
-          calendarMonthly.classList.add("hidden");
-          generateAgend(currentDate.getDate());
-          selectMode.value = "Day";
-        });
+        };
       }
     }
   }
@@ -534,25 +610,16 @@ function changeMonth(offset) {
   generateCalendar(currentMonth, currentYear);
 }
 
-function openNewTask() {
-  newDayActivity.classList.remove("hidden");
-  dateTimeTask.value = `${currentYear}-${addZeroToNumber(
-    currentMonth + 1
-  )}-${addZeroToNumber(currentDay)}`;
-
-  saveTask.addEventListener("submit", () => {
-    newDayActivity.classList.add("hidden");
-  });
-
-  closeTask.addEventListener("click", () => {
-    newDayActivity.classList.add("hidden");
-  });
-}
-
 function initApp() {
   actualizeMonth();
   generateCalendar(currentMonth, currentYear);
   lucideMoon.classList.add("hidden");
+
+  if (localStorage.length === 0) {
+    createActivity();
+  } else {
+    loadActivities();
+  }
 }
 
 document.addEventListener("DOMContentLoaded", initApp);

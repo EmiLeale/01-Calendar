@@ -34,6 +34,8 @@ let dayString;
 
 console.log(currentDate);
 
+let activitiesCalendar =
+  JSON.parse(localStorage.getItem("activitiesOnCalendar")) || [];
 let activities = JSON.parse(localStorage.getItem("activities")) || [];
 
 function createActivity() {
@@ -85,9 +87,24 @@ function openNewTask() {
   dateTimeTask.value = `${currentYear}-${addZeroToNumber(
     currentMonth + 1
   )}-${addZeroToNumber(currentDay)}`;
+
   saveTask.onclick = () => {
     event.preventDefault();
-    newDayActivity.classList.add("hidden");
+    if (selectActivity.value === "") {
+      window.alert("Please select an activity");
+    } else {
+      newDayActivity.classList.add("hidden");
+      addTaskToDay();
+      newDayActivity.querySelector("select").value = "";
+      newDayActivity.querySelector("div input[type=color]").value = "#000000";
+      if (selectMode.value === "Year") {
+        generateYear();
+      } else if (selectMode.value === "Month") {
+        generateCalendar(currentMonth, currentYear);
+      } else if (selectMode.value === "Week") {
+        generateWeek();
+      }
+    }
   };
 
   closeTask.onclick = () => {
@@ -107,6 +124,74 @@ function openNewTask() {
       });
     }
   };
+}
+
+function addTaskToDay() {
+  currentDay = Number(dateTimeTask.value.slice(8, 10));
+  currentMonth = Number(dateTimeTask.value.slice(5, 7)) - 1;
+  currentYear = Number(dateTimeTask.value.slice(0, 4));
+
+  let activity = selectActivity.value;
+  let color = newDayActivity.querySelector("div input[type=color]").value;
+
+  let task = {
+    activity: activity,
+    date: `${currentYear}/${addZeroToNumber(
+      currentMonth + 1
+    )}/${addZeroToNumber(currentDay)}`,
+    day: `${currentDay}`,
+    month: `${currentMonth}`,
+    year: `${currentYear}`,
+    color: color,
+  };
+
+  activitiesCalendar.push(task);
+  localStorage.setItem(
+    "activitiesOnCalendar",
+    JSON.stringify(activitiesCalendar)
+  );
+}
+
+function areThereTasks(container, day) {
+  activitiesCalendar.forEach((activity) => {
+    if (
+      currentMonth === Number(activity.month) &&
+      day === Number(activity.day)
+    ) {
+      let datos = document.createElement("p");
+      datos.style.backgroundColor = `${activity.color}`;
+      datos.classList.add("calendar_day_datos");
+      datos.innerText = activity.activity;
+      container.appendChild(datos);
+    }
+  });
+
+  if (selectMode.value === "Month") {
+    if (container.children.length > 4) {
+      Array.from(container.children).forEach((child, i) => {
+        if (i >= 4) {
+          child.classList.add("hidden");
+        }
+      });
+    }
+  } else if (selectMode.value === "Week") {
+    if (container.children.length > 22) {
+      Array.from(container.children).forEach((child, i) => {
+        if (i >= 22) {
+          child.classList.add("hidden");
+        }
+      });
+    }
+  } else if (selectMode.value === "Year") {
+    if (container.children.length > 0) {
+      Array.from(container.children).forEach((child, i) => {
+        if (i >= 0) {
+          child.classList.add("hidden");
+          container.style.backgroundColor = "red";
+        }
+      });
+    }
+  }
 }
 
 // //Switch the theme of the page
@@ -305,6 +390,9 @@ function generateYear() {
       dayButton.classList.add("calendar-yearly_month_day");
       dayButton.innerText = `${day}`;
       monthDaysContainer.appendChild(dayButton);
+
+      areThereTasks(dayButton, day);
+
       let clickCount = 0;
       dayButton.onclick = () => {
         event.preventDefault();
@@ -381,6 +469,9 @@ function generateWeek() {
     )}</p>`;
     dayDiv.classList.add("calendar-weekly_day_number");
     calendarWeeklyDays.appendChild(dayDiv);
+
+    areThereTasks(dayDiv, dayObj.day);
+
     let clickCount = 0;
     dayDiv.onclick = () => {
       clickCount++;
@@ -541,6 +632,9 @@ function generateCalendar(currentMonth, currentYear) {
         dayDiv.innerHTML = `<p class="calendar-monthly_day_number_p">${day}</p>`;
         dayDiv.classList.add("calendar-monthly_day_number");
         daysContainer.appendChild(dayDiv);
+
+        areThereTasks(dayDiv, day);
+
         day++;
         let clickCount = 0;
         dayDiv.onclick = () => {
@@ -620,6 +714,15 @@ function initApp() {
   } else {
     loadActivities();
   }
+
+  document.onclick = (e) => {
+    let clickInside = document
+      .querySelector("body .calendar")
+      .contains(e.target);
+    if (!clickInside) {
+      newDayActivity.classList.add("hidden");
+    }
+  };
 }
 
 document.addEventListener("DOMContentLoaded", initApp);

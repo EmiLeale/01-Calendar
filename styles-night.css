@@ -124,6 +124,7 @@ select option {
 /* MONHTHLY SELECTION */
 .calendar-monthly {
   min-height: 40rem;
+  max-height: 40rem;
   width: 100%;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -303,17 +304,17 @@ select option {
   height: 1.6rem;
   font-size: 0.8rem;
   margin: 1px 0;
-  background-color: #cd85afa8;
   border-radius: 1rem;
   border: 1px solid transparent;
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: all 0.5s cubic-bezier(0.52, 0.38, 0.95, 0.8);
 }
 .calendar_day_datos:hover {
-  background-color: #cd85af;
+  border-bottom: 1px solid var(--day1);
+  border-top: 1px solid var(--day1);
   border-radius: 0;
-  transition: all 0.5s cubic-bezier(0.52, 0.38, 0.95, 0.8);
 }
 
 /* NEW TASK */

@@ -24,6 +24,7 @@ const placeActivity = document.getElementById("place-activity");
 const newActivity = document.getElementById("new-activity");
 const saveActivity = document.getElementById("save-activity");
 const activitiesContainer = document.getElementById("see-activities");
+const slotsDay = document.getElementById("slots-day");
 
 let dateTimeTask = document.getElementById("datetime-local");
 let currentDate = new Date();
@@ -97,6 +98,7 @@ function openNewTask() {
       addTaskToDay();
       newDayActivity.querySelector("select").value = "";
       newDayActivity.querySelector("div input[type=color]").value = "#000000";
+      newDayActivity.querySelector("div input[type=text]").value = "";
       if (selectMode.value === "Year") {
         generateYear();
       } else if (selectMode.value === "Month") {
@@ -120,6 +122,8 @@ function openNewTask() {
         if (currentSelect === activity.name) {
           newDayActivity.querySelector("div input[type=color]").value =
             activity.color;
+          newDayActivity.querySelector("div input[type=text]").value =
+            activity.description;
         }
       });
     }
@@ -132,10 +136,14 @@ function addTaskToDay() {
   currentYear = Number(dateTimeTask.value.slice(0, 4));
 
   let activity = selectActivity.value;
+
+  let description = newDayActivity.querySelector("div input[type=text]").value;
+
   let color = newDayActivity.querySelector("div input[type=color]").value;
 
   let task = {
     activity: activity,
+    description: description,
     date: `${currentYear}/${addZeroToNumber(
       currentMonth + 1
     )}/${addZeroToNumber(currentDay)}`,
@@ -152,45 +160,80 @@ function addTaskToDay() {
   );
 }
 
-function areThereTasks(container, day) {
-  activitiesCalendar.forEach((activity) => {
-    if (
-      currentMonth === Number(activity.month) &&
-      day === Number(activity.day)
-    ) {
-      let datos = document.createElement("p");
-      datos.style.backgroundColor = `${activity.color}`;
-      datos.classList.add("calendar_day_datos");
-      datos.innerText = activity.activity;
-      container.appendChild(datos);
-    }
-  });
+function areThereTasks(container, day, month, year) {
+  if (
+    selectMode.value === "Month" ||
+    selectMode.value === "Week" ||
+    selectMode.value === "Year"
+  ) {
+    activitiesCalendar.forEach((activity) => {
+      if (
+        month === Number(activity.month) &&
+        day === Number(activity.day) &&
+        year === Number(activity.year)
+      ) {
+        let datos = document.createElement("p");
+        datos.style.backgroundColor = `${activity.color}aa`;
+        datos.classList.add("calendar_day_datos");
+        datos.innerText = activity.activity;
+        container.appendChild(datos);
 
-  if (selectMode.value === "Month") {
-    if (container.children.length > 4) {
-      Array.from(container.children).forEach((child, i) => {
-        if (i >= 4) {
-          child.classList.add("hidden");
+        if (selectMode.value === "Month") {
+          if (container.children.length > 4) {
+            Array.from(container.children).forEach((child, i) => {
+              if (i >= 4) {
+                child.classList.add("hidden");
+              }
+            });
+          }
+        } else if (selectMode.value === "Week") {
+          datos.classList.add("calendar_day_datos_weekly");
+          datos.classList.remove("calendar_day_datos");
+          if (container.children.length > 9) {
+            Array.from(container.children).forEach((child, i) => {
+              if (i >= 9) {
+                child.classList.add("hidden");
+              }
+            });
+          }
+        } else if (selectMode.value === "Year") {
+          if (container.children.length > 0) {
+            Array.from(container.children).forEach((child, i) => {
+              if (i >= 0) {
+                child.classList.add("hidden");
+                container.style.backgroundColor = `${activity.color}aa`;
+              }
+            });
+          }
         }
-      });
-    }
-  } else if (selectMode.value === "Week") {
-    if (container.children.length > 22) {
-      Array.from(container.children).forEach((child, i) => {
-        if (i >= 22) {
-          child.classList.add("hidden");
+      }
+    });
+  } else if (selectMode.value === "Day") {
+    let slots = Array.from(container).slice(1, 13);
+    let usedSlots = new Set();
+
+    activitiesCalendar.forEach((activity) => {
+      if (
+        Number(activity.month) === month &&
+        Number(activity.day) === day &&
+        Number(activity.year) === year
+      ) {
+        let slot = undefined;
+
+        for (let i = 0; i < slots.length; i++) {
+          let s = slots[i];
+          if (!usedSlots.has(s)) {
+            slot = s;
+            break;
+          }
         }
-      });
-    }
-  } else if (selectMode.value === "Year") {
-    if (container.children.length > 0) {
-      Array.from(container.children).forEach((child, i) => {
-        if (i >= 0) {
-          child.classList.add("hidden");
-          container.style.backgroundColor = "red";
+        if (slot) {
+          slot.innerHTML = `<div><h3>${activity.activity}</h3><p>${activity.description}</p></div>`;
+          slot.firstElementChild.style.backgroundColor = `${activity.color}aa`;
+          usedSlots.add(slot);
         }
-      });
-    }
+      }
+    });
   }
 }
 
@@ -391,7 +434,7 @@ function generateYear() {
       dayButton.innerText = `${day}`;
       monthDaysContainer.appendChild(dayButton);
 
-      areThereTasks(dayButton, day);
+      areThereTasks(dayButton, day, i, currentYear);
 
       let clickCount = 0;
       dayButton.onclick = () => {
@@ -420,9 +463,9 @@ function generateYear() {
             )} / ${currentYear}`;
             calendarDaily.classList.remove("hidden");
             calendarYearly.classList.add("hidden");
-            generateAgend(currentDay);
             selectMode.value = "Day";
             newDayActivity.classList.add("hidden");
+            generateAgend(currentDay);
           };
         }
       };
@@ -470,7 +513,7 @@ function generateWeek() {
     dayDiv.classList.add("calendar-weekly_day_number");
     calendarWeeklyDays.appendChild(dayDiv);
 
-    areThereTasks(dayDiv, dayObj.day);
+    areThereTasks(dayDiv, dayObj.day, dayObj.month, dayObj.year);
 
     let clickCount = 0;
     dayDiv.onclick = () => {
@@ -511,9 +554,9 @@ function generateWeek() {
           calendarDaily.classList.remove("hidden");
           calendarWeekly.classList.add("hidden");
           currentDay = dayObj.day;
-          generateAgend(dayObj.day);
           selectMode.value = "Day";
           newDayActivity.classList.add("hidden");
+          generateAgend(dayObj.day);
         };
       }
     };
@@ -555,6 +598,8 @@ function changeWeek(offset) {
 
 // Fuction to actualize the day
 function generateAgend(day) {
+  slotsDay.innerHTML = "";
+
   let actualDate = infoSelect.innerHTML;
   let actualMonth = Number(actualDate.replace(/\D/g, "").slice(0, 2)) - 1;
   let actualYear = Number(actualDate.replace(/\D/g, "").slice(2, 7));
@@ -567,6 +612,18 @@ function generateAgend(day) {
 
   currentMonth = actualMonth;
   currentYear = actualYear;
+
+  horarios = document.createElement("div");
+  horarios.classList.add("calendar-day_horarios_horarios");
+  horarios.innerHTML = `<span>6hs</span><span>10hs</span><span>14hs</span><span>18hs</span><span>20hs</span>`;
+  slotsDay.appendChild(horarios);
+
+  for (let i = 0; i < 12; i++) {
+    slot = document.createElement("button");
+    slot.classList.add("calendar-day_horarios_2hs");
+    slotsDay.appendChild(slot);
+  }
+  areThereTasks(slotsDay.children, numberDay, currentMonth, currentYear);
 }
 arrowBackCalendar.addEventListener("click", generateAgend);
 arrowNextCalendar.addEventListener("click", generateAgend);
@@ -633,7 +690,7 @@ function generateCalendar(currentMonth, currentYear) {
         dayDiv.classList.add("calendar-monthly_day_number");
         daysContainer.appendChild(dayDiv);
 
-        areThereTasks(dayDiv, day);
+        areThereTasks(dayDiv, day, currentMonth, currentYear);
 
         day++;
         let clickCount = 0;
@@ -657,9 +714,9 @@ function generateCalendar(currentMonth, currentYear) {
               )} / ${currentYear}`;
               calendarDaily.classList.remove("hidden");
               calendarMonthly.classList.add("hidden");
-              generateAgend(currentDate.getDate());
               selectMode.value = "Day";
               newDayActivity.classList.add("hidden");
+              generateAgend(currentDate.getDate());
             };
           }
         };

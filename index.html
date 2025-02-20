@@ -20,23 +20,30 @@
         <!-- 16/02/2025 4hrs: Add function buttons when click on a day !-->
         <!-- 17/02/2025 7.5hrs: Finish .js calendar, add pop up day task !-->
         <!-- 18/02/2025 4hrs: Add function to Activities and popUp !-->
-        
+        <!-- 19/02/2025 4hrs: Actualize calendar when you add a task !-->
+        <!-- 20/02/2025 5.5hrs: Keep growing the JS, one mistake to fix. Styling some CSS, make prettier the app !-->
+
         <!-- Atention to the error on the CurrentYear when we pass the year and try a task !-->
+        <!-- Make to checkbox of Activity (in the menu) function to check, only view these activities !-->
 
 
-    <button id="switch-theme"><svg id="lucide-moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><svg id="lucide-sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></button>
 
     <section class="calendar">
         <div class="switch-calendar">
-            <button id="arrow-back" onclick="changeMonth(-1)"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg></button>
-            <p id="info-select"></p>
-            <button id="arrow-next" onclick="changeMonth(1)"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg></button>
+            <div>
+                <button id="arrow-back" onclick="changeMonth(-1)"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg></button>
+                <p id="info-select"></p>
+                <button id="arrow-next" onclick="changeMonth(1)"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg></button>
+                
+            </div>
             <select class="switch-calendar_change-view" id="switch-mode">
                 <option>Month</option>
                 <option>Day</option>
                 <option>Week</option>
                 <option>Year</option>
             </select>
+            <button id="switch-theme"><svg id="lucide-moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><svg id="lucide-sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></button>
+
         </div>
 
         <div class="calendar-monthly" id="calendar-monthly"><!-- Monthly calendar -->
@@ -59,21 +66,7 @@
                 <button id="arrow-next-daily" onclick="changeDay(1)"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg></button>
                 
             </div>
-            <div class="calendar-day_horarios">
-                <div class="calendar-day_horarios_horarios"><span>6hs</span><span>10hs</span><span>14hs</span><span>18hs</span><span>20hs</span></div>
-                <div class="calendar-day_horarios_2hs"></div>
-                <div class="calendar-day_horarios_2hs"></div>
-                <div class="calendar-day_horarios_2hs"></div>
-                <div class="calendar-day_horarios_2hs"></div>
-                <div class="calendar-day_horarios_2hs"></div>
-                <div class="calendar-day_horarios_2hs"></div>
-                <div class="calendar-day_horarios_2hs"></div>
-                <div class="calendar-day_horarios_2hs"></div>
-                <div class="calendar-day_horarios_2hs"></div>
-                <div class="calendar-day_horarios_2hs"></div>
-                <div class="calendar-day_horarios_2hs"></div>
-                <div class="calendar-day_horarios_2hs"></div>
-            </div>
+            <div class="calendar-day_horarios" id="slots-day"></div>
         </div>
 
         <div class="calendar-yearly hidden" id="calendar-yearly"><!-- Yearly calendar -->
@@ -88,6 +81,7 @@
             <div>
                 <input type="color">
                 <input type="submit" value="Save" class="save-activity" id="save-task">
+                <input type="text" class="hidden">
                 <button><svg id="close-task" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
             </div>
             

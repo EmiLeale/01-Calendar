@@ -25,6 +25,7 @@ const newActivity = document.getElementById("new-activity");
 const saveActivity = document.getElementById("save-activity");
 const activitiesContainer = document.getElementById("see-activities");
 const slotsDay = document.getElementById("slots-day");
+const selectActivity = document.querySelector("#new-day-activity select");
 
 let dateTimeTask = document.getElementById("datetime-local");
 let currentDate = new Date();
@@ -33,14 +34,66 @@ let currentMonth = currentDate.getMonth();
 let currentYear = currentDate.getFullYear();
 let dayString;
 
-console.log(currentDate);
-
 let activitiesCalendar =
   JSON.parse(localStorage.getItem("activitiesOnCalendar")) || [];
 let activities = JSON.parse(localStorage.getItem("activities")) || [];
 
+console.log(currentDate);
+
+function editActivity(event) {
+  let btnEdit = event.target;
+  let label = btnEdit
+    .closest(".activity_activities_individual")
+    .querySelector("label").innerText;
+
+  for (let i = 0; i < activities.length; i++) {
+    if (label === activities[i].name) {
+      let activity = {
+        name: activities[i].name,
+        description: activities[i].description,
+        color: activities[i].color,
+      };
+
+      newActivity.classList.remove("hidden");
+      newActivity.querySelector("input").value = activities[i].name;
+      newActivity.querySelector("div input[type=color]").value =
+        activities[i].color;
+      newActivity.querySelector("textarea").value = activities[i].description;
+
+      saveActivity.onclick = () => {
+        event.preventDefault();
+        let actualizeActivity = {
+          name: newActivity.querySelector("input").value.trim(),
+          description: newActivity.querySelector("textarea").value.trim(),
+          color: newActivity.querySelector("div input[type=color]").value,
+        };
+
+        if (activity.name === "" || activity.description === "") {
+          window.alert("Please enter a title and a description");
+          return;
+        }
+
+        activities[i] = actualizeActivity;
+        localStorage.setItem("activities", JSON.stringify(activities));
+        loadActivities();
+
+        newActivity.querySelector("input").value = "";
+        newActivity.querySelector("div input[type=color]").value = "#000000";
+        newActivity.querySelector("textarea").value = "";
+      };
+    }
+  }
+}
+
 function createActivity() {
-  newActivity.classList.toggle("hidden");
+  newActivity.querySelector("input").value = "";
+  newActivity.querySelector("div input[type=color]").value = "#000000";
+  newActivity.querySelector("textarea").value = "";
+  if (activitiesContainer.classList.contains("hidden")) {
+    newActivity.classList.remove("hidden");
+  } else {
+    newActivity.classList.toggle("hidden");
+  }
   saveActivity.onclick = () => {
     event.preventDefault();
     let activity = {
@@ -61,7 +114,6 @@ function createActivity() {
   };
 }
 placeActivity.addEventListener("click", createActivity);
-const selectActivity = document.querySelector("#new-day-activity select");
 
 function loadActivities() {
   let activities = JSON.parse(localStorage.getItem("activities")) || [];
@@ -73,7 +125,7 @@ function loadActivities() {
     divTask = document.createElement("div");
     activitiesContainer.appendChild(divTask);
     divTask.classList.add("activity_activities_individual");
-    divTask.innerHTML = `<input type="checkbox" id="checkbox${i}"><label class="activity_name-of-activity" for="checkbox${i}">${activities[i].name}</label>`;
+    divTask.innerHTML = `<input type="checkbox" id="checkbox${i}"><label class="activity_name-of-activity" for="checkbox${i}">${activities[i].name}</label><button onclick="editActivity(event)"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-pen"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></svg></button>`;
 
     option = document.createElement("option");
     selectActivity.appendChild(option);

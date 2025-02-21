@@ -372,7 +372,7 @@ select option {
 }
 #new-day-activity select,
 #new-day-activity #datetime-local {
-  width: 100%;
+  width: 90%;
   height: 2rem;
   text-align: center;
   outline: none;
@@ -387,7 +387,20 @@ select option {
 #new-day-activity button:hover svg {
   background-color: var(--background-night);
 }
+#new-day-activity div {
+  width: 90%;
+  height: 2rem;
+  margin: 0.5rem;
 
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#new-day-activity div button svg {
+  margin: 0;
+}
 /* ACTIVITY SECTION */
 
 .activity {
@@ -400,8 +413,8 @@ select option {
 }
 
 .activity_title {
-  width: 15rem;
-  padding-bottom: 0.5rem;
+  width: 100%;
+  padding: 0.5rem;
   border-bottom: 1px solid black;
   display: flex;
   align-items: end;
@@ -417,7 +430,6 @@ select option {
 .activity_activities {
   height: 100%;
   width: 15rem;
-  padding-top: 0.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -425,39 +437,55 @@ select option {
 .activity_activities_individual {
   width: 80%;
   padding: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: start;
 }
 .activity_name-of-activity {
-  padding-left: 0.5rem;
+  width: 100%;
+  padding-left: 1rem;
+}
+.activity_activities_individual button {
+  justify-self: end;
 }
 
 /* NEW ACTIVITY FORM */
 .activity_new-activity {
   height: fit-content;
-  width: 15rem;
+  max-width: 20rem;
+  width: 100%;
   background-color: var(--day3);
-  border-radius: 1rem;
+  border-end-end-radius: 1rem;
+  border-end-start-radius: 1rem;
 }
 .activity_new-activity form {
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  border-top: 1px solid black;
 }
 .activity_new-activity form *,
 #new-day-activity * {
-  margin: 0.3rem;
+  margin: 0.5rem;
   font-size: 0.9rem;
   border: 1px solid var(--background-night);
   border-radius: 0.5rem;
 }
 .activity_new-activity form input {
   height: 2rem;
+  max-width: 100%;
+  margin: 0.5rem;
+
   background-color: var(--background-night);
   outline: 1px solid transparent;
 }
 .activity_new-activity form textarea {
+  min-width: 15rem;
+  max-width: 19rem;
   min-height: 5rem;
-  max-height: 10rem;
+  max-height: 5rem;
+  margin: 0.5rem;
   background-color: var(--background-night);
   outline: 1px solid transparent;
 }
@@ -469,11 +497,10 @@ select option {
 .activity_new-activity form input {
   padding: 0.3rem;
 }
-.activity_new-activity form div,
-#new-day-activity div {
+.activity_new-activity form div {
+  border: none;
   display: flex;
   justify-content: space-around;
-  border: none;
   align-items: center;
 }
 .activity_new-activity #new-activity input:first-of-type,

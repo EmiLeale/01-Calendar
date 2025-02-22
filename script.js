@@ -21,6 +21,13 @@ const newDayActivity = document.getElementById("new-day-activity");
 const saveTask = document.getElementById("save-task");
 const closeTask = document.getElementById("close-task");
 const placeActivity = document.getElementById("place-activity");
+const placeActivityPlace = document.querySelector(
+  "#place-activity .lucide-circle-plus"
+);
+const placeActivityMinus = document.querySelector(
+  "#place-activity .lucide-circle-minus"
+);
+
 const newActivity = document.getElementById("new-activity");
 const saveActivity = document.getElementById("save-activity");
 const activitiesContainer = document.getElementById("see-activities");
@@ -89,10 +96,13 @@ function createActivity() {
   newActivity.querySelector("input").value = "";
   newActivity.querySelector("div input[type=color]").value = "#000000";
   newActivity.querySelector("textarea").value = "";
+
   if (activitiesContainer.classList.contains("hidden")) {
     newActivity.classList.remove("hidden");
   } else {
     newActivity.classList.toggle("hidden");
+    placeActivityMinus.classList.toggle("hidden");
+    placeActivityPlace.classList.toggle("hidden");
   }
   saveActivity.onclick = () => {
     event.preventDefault();
@@ -125,7 +135,7 @@ function loadActivities() {
     divTask = document.createElement("div");
     activitiesContainer.appendChild(divTask);
     divTask.classList.add("activity_activities_individual");
-    divTask.innerHTML = `<input type="checkbox" id="checkbox${i}"><label class="activity_name-of-activity" for="checkbox${i}">${activities[i].name}</label><button onclick="editActivity(event)"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-pen"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></svg></button>`;
+    divTask.innerHTML = `<input type="checkbox" id="checkbox${i}" class="checkbox-activity"><label class="activity_name-of-activity" for="checkbox${i}">${activities[i].name}</label><button onclick="editActivity(event)"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-pen"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></svg></button>`;
 
     option = document.createElement("option");
     selectActivity.appendChild(option);

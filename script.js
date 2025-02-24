@@ -35,7 +35,6 @@ const activitiesContainer = document.getElementById("see-activities");
 const slotsDay = document.getElementById("slots-day");
 const selectActivity = document.querySelector("#new-day-activity select");
 
-let x = false;
 let dateTimeTask = document.getElementById("datetime-local");
 let currentDate = new Date();
 let currentDay = currentDate.getDate();
@@ -46,8 +45,6 @@ let dayString;
 let activitiesCalendar =
   JSON.parse(localStorage.getItem("activitiesOnCalendar")) || [];
 let activities = JSON.parse(localStorage.getItem("activities")) || [];
-
-console.log(currentDate);
 
 function editActivity(event) {
   let btnEdit = event.target;
@@ -380,6 +377,7 @@ const switchMode = () => {
       calendarWeekly.classList.add("hidden");
       calendarDaily.classList.add("hidden");
       newDayActivity.classList.add("hidden");
+      actualizeMonth();
       generateYear();
       break;
     default:
@@ -405,9 +403,13 @@ const addZeroToNumber = (number) => {
 
 // Function to actualize the Month on paragraph Info Select
 function actualizeMonth() {
-  infoSelect.innerText = `${addZeroToNumber(
-    currentMonth + 1
-  )} / ${currentYear}`;
+  if (selectMode.value === "Year") {
+    infoSelect.innerText = `${currentYear}`;
+  } else {
+    infoSelect.innerText = `${addZeroToNumber(
+      currentMonth + 1
+    )} / ${currentYear}`;
+  }
 }
 
 // Function for pass the number day to String day
@@ -482,7 +484,6 @@ const whichMonthIsIt = (month) => {
 
 // Function to Generate de Yearly calendar
 function generateYear() {
-  infoSelect.innerText = `${currentYear}`;
   const months = [
     "January",
     "February",
@@ -705,18 +706,11 @@ function changeWeek(offset) {
 function generateAgend(day) {
   slotsDay.innerHTML = "";
 
-  let actualDate = infoSelect.innerHTML;
-  let actualMonth = Number(actualDate.replace(/\D/g, "").slice(0, 2)) - 1;
-  let actualYear = Number(actualDate.replace(/\D/g, "").slice(2, 7));
-  let numberDay = currentDay;
-  let newActualDate = new Date(actualYear, actualMonth, numberDay);
+  let newActualDate = new Date(currentYear, currentMonth, currentDay);
   let newCurrenDate = newActualDate.getDay();
   dayCalendarOnDaily.innerText = `${whichDayIsIt(
     newCurrenDate
-  )} ${addZeroToNumber(numberDay)}`;
-
-  currentMonth = actualMonth;
-  currentYear = actualYear;
+  )} ${addZeroToNumber(currentDay)}`;
 
   horarios = document.createElement("div");
   horarios.classList.add("calendar-day_horarios_horarios");
@@ -731,7 +725,7 @@ function generateAgend(day) {
       openNewTask();
     };
   }
-  areThereTasks(slotsDay.children, numberDay, currentMonth, currentYear);
+  areThereTasks(slotsDay.children, currentDay, currentMonth, currentYear);
 }
 arrowBackCalendar.addEventListener("click", generateAgend);
 arrowNextCalendar.addEventListener("click", generateAgend);
@@ -863,7 +857,15 @@ function changeMonth(offset) {
   } else if (selectMode.value === "Year") {
     currentYear = Number(infoSelect.innerText);
     currentYear += offset;
+    currentMonth = 0;
+
+    y = new Date(currentYear, currentMonth, 1);
+    currentYear = y.getFullYear();
+    currentMonth = y.getMonth();
+    currentDay = y.getDate();
+    actualizeMonth();
     generateYear();
+
     return;
   }
   generateCalendar(currentMonth, currentYear);

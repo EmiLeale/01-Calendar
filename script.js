@@ -27,6 +27,7 @@ const placeActivityPlace = document.querySelector(
 const placeActivityMinus = document.querySelector(
   "#place-activity .lucide-circle-minus"
 );
+const deleteTask = document.getElementById("delete-task");
 
 const newActivity = document.getElementById("new-activity");
 const saveActivity = document.getElementById("save-activity");
@@ -34,6 +35,7 @@ const activitiesContainer = document.getElementById("see-activities");
 const slotsDay = document.getElementById("slots-day");
 const selectActivity = document.querySelector("#new-day-activity select");
 
+let x = false;
 let dateTimeTask = document.getElementById("datetime-local");
 let currentDate = new Date();
 let currentDay = currentDate.getDate();
@@ -99,6 +101,9 @@ function createActivity() {
 
   if (activitiesContainer.classList.contains("hidden")) {
     newActivity.classList.remove("hidden");
+
+    placeActivityMinus.classList.remove("hidden");
+    placeActivityPlace.classList.add("hidden");
   } else {
     newActivity.classList.toggle("hidden");
     placeActivityMinus.classList.toggle("hidden");
@@ -137,6 +142,24 @@ function loadActivities() {
     divTask.classList.add("activity_activities_individual");
     divTask.innerHTML = `<input type="checkbox" id="checkbox${i}" class="checkbox-activity"><label class="activity_name-of-activity" for="checkbox${i}">${activities[i].name}</label><button onclick="editActivity(event)"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-pen"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></svg></button>`;
 
+    let checkBox = document.getElementById(`checkbox${i}`);
+    checkBox.onchange = () => {
+      let content = checkBox.parentElement.querySelector("label").innerText;
+
+      let ver = Array.from(document.querySelectorAll(".calendar button"));
+      let verName = ver.filter((button) => button.innerText === content);
+      verName.forEach((button) =>
+        button.setAttribute("data-content", button.innerText.trim())
+      );
+      let verName1 = ver.filter((button) => button.dataset.content === content);
+
+      if (checkBox.checked) {
+        verName1.forEach((button) => button.classList.add("hidden"));
+      } else {
+        verName1.forEach((button) => button.classList.remove("hidden"));
+      }
+    };
+
     option = document.createElement("option");
     selectActivity.appendChild(option);
     option.id = `activity${i}`;
@@ -150,6 +173,13 @@ function openNewTask() {
   dateTimeTask.value = `${currentYear}-${addZeroToNumber(
     currentMonth + 1
   )}-${addZeroToNumber(currentDay)}`;
+
+  if (!x) {
+    newDayActivity.querySelector("select").value = "";
+    newDayActivity.querySelector("div input[type=color]").value = "#000000";
+    newDayActivity.querySelector("div input[type=text]").value = "";
+  }
+  x = false;
 
   saveTask.onclick = () => {
     event.preventDefault();
@@ -167,6 +197,8 @@ function openNewTask() {
         generateCalendar(currentMonth, currentYear);
       } else if (selectMode.value === "Week") {
         generateWeek();
+      } else {
+        generateAgend(currentDay);
       }
     }
   };
@@ -234,10 +266,14 @@ function areThereTasks(container, day, month, year) {
         day === Number(activity.day) &&
         year === Number(activity.year)
       ) {
-        let datos = document.createElement("p");
+        let datos = document.createElement("button");
         datos.style.backgroundColor = `${activity.color}aa`;
         datos.classList.add("calendar_day_datos");
         datos.innerText = activity.activity;
+        let p = document.createElement("p");
+        p.innerText = `${activity.color} ${activity.description} ${activity.date}`;
+        p.classList.add("hidden");
+        datos.appendChild(p);
         container.appendChild(datos);
 
         if (selectMode.value === "Month") {
@@ -299,23 +335,23 @@ function areThereTasks(container, day, month, year) {
   }
 }
 
-// //Switch the theme of the page
-// function changeTheme() {
-//   if (link.href.endsWith("styles.css")) {
-//     link.href = link.href.replace("styles.css", "styles-night.css");
-//     lucideSun.classList.remove("hidden");
-//     lucideMoon.classList.add("hidden");
-//   } else if (link.href.endsWith("styles-night.css")) {
-//     link.href = link.href.replace("styles-night.css", "styles.css");
-//     lucideSun.classList.add("hidden");
-//     lucideMoon.classList.remove("hidden");
-//   } else {
-//     link.href = link.href.replace("styles.css", "styles-night.css");
-//     lucideSun.classList.remove("hidden");
-//     lucideMoon.classList.add("hidden");
-//   }
-// }
-// switchTheme.addEventListener("click", changeTheme);
+//Switch the theme of the page
+function changeTheme() {
+  if (link.href.endsWith("styles.css")) {
+    link.href = link.href.replace("styles.css", "styles-night.css");
+    lucideSun.classList.remove("hidden");
+    lucideMoon.classList.add("hidden");
+  } else if (link.href.endsWith("styles-night.css")) {
+    link.href = link.href.replace("styles-night.css", "styles.css");
+    lucideSun.classList.add("hidden");
+    lucideMoon.classList.remove("hidden");
+  } else {
+    link.href = link.href.replace("styles.css", "styles-night.css");
+    lucideSun.classList.remove("hidden");
+    lucideMoon.classList.add("hidden");
+  }
+}
+switchTheme.addEventListener("click", changeTheme);
 
 // Who happen when we switched the Select
 const switchMode = () => {
@@ -476,6 +512,13 @@ function generateYear() {
     let h3 = document.createElement("h3");
     h3.innerText = `${months[i]}`;
     monthDiv.appendChild(h3);
+    h3.style.cursor = "pointer";
+    h3.onclick = () => {
+      calendarYearly.innerHTML = "";
+      currentMonth = whichMonthIsIt(months[i]) - 1;
+      selectMode.value = "Month";
+      switchMode();
+    };
 
     let monthDaysContainer = document.createElement("div");
     monthDaysContainer.classList.add("calendar-yearly_month");
@@ -684,6 +727,9 @@ function generateAgend(day) {
     slot = document.createElement("button");
     slot.classList.add("calendar-day_horarios_2hs");
     slotsDay.appendChild(slot);
+    slot.onclick = () => {
+      openNewTask();
+    };
   }
   areThereTasks(slotsDay.children, numberDay, currentMonth, currentYear);
 }

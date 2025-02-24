@@ -198,19 +198,13 @@ select option {
 
   height: 100%;
   width: 100%;
-  border: 1px solid transparent;
-  border-left: 1px solid var(--background-night);
-  border-top: 1px solid var(--background-night);
-  border-bottom: 1px solid var(--background-night);
+  border: 1px solid var(--background-night);
   text-align: center;
   transition: all 0.2s cubic-bezier(0.52, 0.38, 0.95, 0.8);
 }
 .calendar-weekly_day_number:hover {
   border: 1px solid var(--day1);
   background-color: var(--day2);
-}
-.calendar-weekly_day_number:last-of-type {
-  border-right: 1px solid var(--background-night);
 }
 .calendar-weekly_day_number_p {
   height: 1.6rem;
@@ -362,8 +356,6 @@ select option {
   height: fit-content;
   width: fit-content;
   position: absolute;
-  left: middle;
-  top: middle;
   border-radius: 1rem;
   padding: 1rem;
   background-color: var(--day2);

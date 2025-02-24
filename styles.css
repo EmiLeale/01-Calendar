@@ -1,38 +1,15 @@
-/* 
-
-styles.css is not actualize. 
-styles.css will be actualize after finish project
-styles-night.css will be default theme until finish project.
-After finish the project, the default theme should be users configuration choice.
-
-
-What is missing?
-- Button on day theme *ALL*
-
-
-
-
-
-
-
-
-
-
- */
-
 @font-face {
   font-family: "Sora";
   src: url(/fonts/Sora/Sora-VariableFont_wght.ttf);
 }
 :root {
   --background-day: #f9f9f9;
-  --text-day: #333333;
-  --secondary-elements-day: #e0e0e0;
-  --buttons-day: #4caf50;
+  --day1: #e0e0e0;
+  --day2: #757575;
+  --day3: #333333;
   --background-night: #121212;
-  --text-night: #ffffff;
-  --secondary-elements-night: #333333;
-  --buttons-night: #2e7d32;
+  --night1: #303030;
+  --night2: #424242;
 }
 * {
   font-family: "Sora", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -49,7 +26,7 @@ What is missing?
   text-align: left;
   text-decoration: none;
   text-indent: 0;
-  color: var(--text-day);
+  color: var(--night1);
 }
 button::-moz-focus-inner,
 input::-moz-focus-inner {
@@ -60,33 +37,37 @@ input::-moz-focus-inner {
   display: none !important;
 }
 body {
-  height: 100dvh;
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  height: 100dvh;
   background-color: var(--background-day);
-}
-.calendar {
-  width: clamp(400px, 600px, 900px);
-  height: 100%;
-  padding: 1rem 0;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 button {
   height: 100%;
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
+
+.calendar {
+  min-width: 600px;
+  height: fit-content;
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
 .calendar svg {
   border: 1px solid transparent;
-  color: var(--background-night);
+  color: var(--night1);
 }
 .calendar svg:hover {
-  background-color: var(--secondary-elements-day);
+  background-color: var(--day2);
   border-radius: 50%;
   transition: background-color 0.2s cubic-bezier(0.52, 0.38, 0.95, 0.8);
 }
@@ -95,13 +76,19 @@ button {
   width: 100%;
   height: 3rem;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
+}
+.switch-calendar div {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
 #info-select {
   width: 10rem;
   text-align: center;
 }
+
 select {
   width: 8rem;
   height: 2rem;
@@ -122,9 +109,27 @@ select option {
   font-size: 0.8rem;
 }
 
+#switch-theme {
+  width: 48px;
+  height: 2rem;
+  border-radius: 2rem;
+  background-color: var(--day2);
+  border: 1px solid transparent;
+  display: flex;
+}
+#switch-theme:hover {
+  border: 1px solid var(--day3);
+}
+#switch-theme svg {
+  background-color: var(--day1);
+  border-radius: 2rem;
+  margin-inline: 3px;
+}
+
 /* MONHTHLY SELECTION */
 .calendar-monthly {
-  height: 40rem;
+  min-height: 40rem;
+  max-height: 40rem;
   width: 100%;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -138,21 +143,26 @@ select option {
   align-items: center;
 }
 .calendar-monthly_day_number {
-  background-color: var(--secondary-elements-day);
+  display: flex;
+  flex-direction: column;
+  background-color: var(--day1);
   font-size: 0.8rem;
   border: 1px solid transparent;
-  transition: all 0.1s cubic-bezier(0.52, 0.38, 0.95, 0.8);
+  transition: all 0.2s cubic-bezier(0.52, 0.38, 0.95, 0.8);
 }
 .calendar-monthly_day_number:hover,
 .calendar-monthly_day_number_out-of-month:hover {
-  border: 1px solid var(--secondary-elements-day);
+  border: 1px solid var(--day2);
+  background-color: var(--background-day);
 }
 .calendar-monthly_day_number_out-of-month {
-  background-color: var(--secondary-elements-day);
+  display: flex;
+  flex-direction: column;
+  background-color: var(--day1);
   font-size: 0.8rem;
   opacity: 0.5;
   border: 1px solid transparent;
-  transition: all 0.1s cubic-bezier(0.52, 0.38, 0.95, 0.8);
+  transition: all 0.2s cubic-bezier(0.52, 0.38, 0.95, 0.8);
 }
 .calendar-monthly_day_number_p {
   width: 100%;
@@ -161,7 +171,7 @@ select option {
   padding: 0 0.1rem;
   display: flex;
   align-items: center;
-  transition: all 0.1s cubic-bezier(0.52, 0.38, 0.95, 0.8);
+  transition: all 0.2s cubic-bezier(0.52, 0.38, 0.95, 0.8);
 }
 :is(
     .calendar-monthly_day_number,
@@ -177,21 +187,24 @@ select option {
   width: 100%;
 }
 .calendar-weekly_day {
-  background-color: var(--secondary-elements-day);
+  background-color: var(--day1);
   display: flex;
   width: 100%;
   height: 100%;
 }
 .calendar-weekly_day_number {
+  display: flex;
+  flex-direction: column;
   height: 100%;
   width: 100%;
-  border-left: 1px solid var(--background-day);
-  border-top: 1px solid var(--background-day);
-  border-bottom: 1px solid var(--background-day);
+  border: 1px solid transparent;
+  border: 1px solid var(--background-day);
   text-align: center;
+  transition: all 0.2s cubic-bezier(0.52, 0.38, 0.95, 0.8);
 }
-.calendar-weekly_day_number:last-of-type {
-  border-right: 1px solid var(--background-day);
+.calendar-weekly_day_number:hover {
+  border: 1px solid var(--night1);
+  background-color: var(--background-day);
 }
 .calendar-weekly_day_number_p {
   height: 1.6rem;
@@ -200,6 +213,7 @@ select option {
   align-items: center;
   justify-content: center;
 }
+
 /* DAY SELECTION */
 .calendar-day {
   height: 40rem;
@@ -221,12 +235,13 @@ select option {
 }
 .calendar-day_horarios {
   height: 100%;
-  background-color: var(--secondary-elements-day);
+  background-color: var(--day1);
   display: grid;
   grid-template-columns: 1fr 6fr;
   grid-template-rows: repeat(12, 1fr);
 }
 .calendar-day_horarios_horarios {
+  height: 100%;
   grid-area: 1 / 1 / 13 / 2;
   border: 1px solid var(--background-day);
   display: flex;
@@ -240,8 +255,27 @@ select option {
 }
 
 .calendar-day_horarios_2hs {
+  height: 100%;
   border-top: 1px solid var(--background-day);
   border-right: 1px solid var(--background-day);
+}
+.calendar-day_horarios_2hs div {
+  height: 100%;
+  width: 100%;
+  padding-left: 2rem;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s cubic-bezier(0.52, 0.38, 0.95, 0.8);
+}
+
+.calendar-day_horarios_2hs h3 {
+  width: 10rem;
+  font-size: 1.1rem;
+}
+.calendar-day_horarios_2hs p {
+  width: 10rem;
+  font-size: 0.8rem;
 }
 .calendar-day_horarios_2hs:last-of-type {
   border-bottom: 1px solid var(--background-day);
@@ -252,9 +286,9 @@ select option {
   height: 40rem;
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  grid-gap: 1px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  grid-gap: 1rem;
 }
 .calendar-yearly_month_container {
   display: flex;
@@ -263,56 +297,116 @@ select option {
   width: 100%;
   height: 100%;
 }
+.calendar-yearly_month_container h3 {
+  margin-bottom: 2px;
+}
 .calendar-yearly_month {
   width: 100%;
+  height: 100%;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: repeat(5, 1fr);
-  grid-gap: 1px;
+  grid-template-rows: repeat(6, 1fr);
+}
+.calendar-yearly_month_day.empty {
+  visibility: hidden;
+  pointer-events: none;
 }
 .calendar-yearly_month_day {
-  background-color: #cd85afa8;
-  font-size: 0.8rem;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
+  height: 1.3rem;
+  aspect-ratio: 1 / 1;
   align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+
+  border-radius: 50%;
+  cursor: pointer;
 }
 .calendar-yearly_month_day:hover {
-  background-color: #cd85af;
+  background-color: var(--day2);
 }
 
 /* DATOS STYLE */
-.calendar_day_datos {
+.calendar_day_datos,
+.calendar_day_datos_weekly {
   width: 100%;
-  height: 1.6rem;
+  height: 1.4rem;
   font-size: 0.8rem;
   margin: 1px 0;
-  background-color: #cd85afa8;
   border-radius: 1rem;
   border: 1px solid transparent;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.calendar_day_datos:hover {
-  background-color: #cd85af;
-  border-radius: 0;
-  transition: all 0.5s cubic-bezier(0.52, 0.38, 0.95, 0.8);
+  transition: all 0.2s cubic-bezier(0.52, 0.38, 0.95, 0.8);
 }
 
+.calendar_day_datos_weekly {
+  height: 4rem;
+}
+.calendar_day_datos:hover,
+.calendar_day_datos_weekly:hover,
+.calendar-day_horarios_2hs div:hover {
+  border-bottom: 1px solid var(--night1);
+  border-top: 1px solid var(--night1);
+  border-radius: 0;
+}
+
+/* NEW TASK */
+#new-day-activity {
+  height: fit-content;
+  width: fit-content;
+  position: absolute;
+  border-radius: 1rem;
+  padding: 1rem;
+  background-color: var(--day1);
+  display: flex;
+  flex-direction: column;
+}
+#new-day-activity select,
+#new-day-activity #datetime-local {
+  width: 90%;
+  height: 2rem;
+  text-align: center;
+  outline: none;
+}
+#new-day-activity button,
+#new-day-activity button svg {
+  outline: none;
+  border: none;
+  stroke: var(--day2);
+}
+#new-day-activity button:hover,
+#new-day-activity button:hover svg {
+  background-color: var(--day2);
+}
+#new-day-activity div {
+  width: 90%;
+  height: 2rem;
+  margin: 0.5rem;
+
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#new-day-activity div button svg {
+  margin: 0;
+}
 /* ACTIVITY SECTION */
+
 .activity {
   height: fit-content;
   width: fit-content;
-  background-color: var(--secondary-elements-day);
-  padding: 1rem;
+  background-color: var(--day1);
+  margin: 1rem;
   border-radius: 1rem;
+  align-self: center;
 }
 
 .activity_title {
-  width: 15rem;
-  padding-bottom: 0.5rem;
+  width: 100%;
+  padding: 0.5rem;
   border-bottom: 1px solid black;
   display: flex;
   align-items: end;
@@ -328,7 +422,6 @@ select option {
 .activity_activities {
   height: 100%;
   width: 15rem;
-  padding-top: 0.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -336,75 +429,182 @@ select option {
 .activity_activities_individual {
   width: 80%;
   padding: 0.5rem 0;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: start;
 }
-.activity_name-of-activity {
-  padding-left: 0.5rem;
+
+.activity_activities_individual button {
+  justify-self: end;
 }
 
 /* NEW ACTIVITY FORM */
 .activity_new-activity {
   height: fit-content;
-  width: 15rem;
-  background-color: var(--secondary-elements-day);
-  border-radius: 1rem;
+  max-width: 20rem;
+  width: 100%;
+  background-color: var(--day1);
+  border-end-end-radius: 1rem;
+  border-end-start-radius: 1rem;
 }
 .activity_new-activity form {
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  border-top: 1px solid black;
 }
-.activity_new-activity form * {
-  margin: 0.3rem 0;
+.activity_new-activity form *,
+#new-day-activity * {
+  margin: 0.5rem;
   font-size: 0.9rem;
   border: 1px solid var(--background-day);
   border-radius: 0.5rem;
 }
 .activity_new-activity form input {
   height: 2rem;
-  width: 100%;
+  max-width: 100%;
+  margin: 0.5rem;
+
   background-color: var(--background-day);
   outline: 1px solid transparent;
 }
 .activity_new-activity form textarea {
-  max-width: 100%;
-  height: 5rem;
-  max-height: 10rem;
+  min-width: 15rem;
+  max-width: 19rem;
+  min-height: 5rem;
+  max-height: 5rem;
+  margin: 0.5rem;
   background-color: var(--background-day);
   outline: 1px solid transparent;
 }
 .activity_new-activity form input:focus,
 .activity_new-activity form textarea:focus {
-  outline: 1px solid var(--background-night);
+  outline: 1px solid var(--background-day);
 }
 .activity_new-activity form textarea,
 .activity_new-activity form input {
   padding: 0.3rem;
 }
 .activity_new-activity form div {
+  border: none;
   display: flex;
   justify-content: space-around;
-  border: none;
+  align-items: center;
 }
-.activity_new-activity form div input:first-of-type {
+.activity_new-activity #new-activity input:first-of-type,
+#new-day-activity div input:first-of-type {
   border: none;
   outline: none;
+  height: 2rem;
 }
-.activity_new-activity form div input {
+.activity_new-activity form div input,
+#new-day-activity div input:first-of-type {
   width: 30%;
   margin: 0;
   padding: 0;
   background-color: transparent;
 }
-.activity_new-activity form .save-activity {
+.activity_new-activity form .save-activity,
+#new-day-activity div .save-activity {
   width: 50%;
+  height: 2rem;
   border-radius: 1rem;
   align-self: center;
   text-align: center;
   cursor: pointer;
   transition: background-color 0.2s cubic-bezier(0.52, 0.38, 0.95, 0.8);
 }
-.activity_new-activity form .save-activity:hover {
+.activity_new-activity form .save-activity:hover,
+#new-day-activity .save-activity:hover {
   background-color: var(--background-day);
+}
+
+/* PERZONALIZE INPUTS */
+
+input[type="checkbox" i] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: absolute;
+  height: 1rem;
+  aspect-ratio: 1 / 1;
+  opacity: 0;
+}
+.activity_name-of-activity {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 1rem;
+}
+.activity_name-of-activity::before {
+  content: "";
+  width: 1rem;
+  height: 1rem;
+  border-radius: 5px;
+  border: 1px solid var(--night1);
+  display: inline-block;
+  transition: all 0.2s cubic-bezier(0.52, 0.38, 0.95, 0.8);
+  background-color: transparent;
+}
+
+input[type="checkbox"]:checked + .activity_name-of-activity::before {
+  background-color: var(--background-day);
+  border-color: var(--background-day);
+  content: "✔";
+  font-size: 1rem;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* MEDIAS QUERIES  */
+
+@media (max-width: 900px) {
+  body {
+    margin-top: 1rem;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .switch-calendar {
+    justify-content: space-around;
+  }
+
+  .activity {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .activity_title {
+    height: 100%;
+    align-items: start;
+  }
+  .activity_title button {
+    height: 100%;
+  }
+}
+
+@media (max-width: 610px) {
+  body {
+    width: 100%;
+    margin: 0rem;
+  }
+
+  .calendar {
+    min-width: 90%;
+    width: 90%;
+  }
+  #info-select {
+    width: 5rem;
+  }
+  .switch-calendar_change-view {
+    width: 6rem;
+  }
 }

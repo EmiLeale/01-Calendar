@@ -41,6 +41,7 @@ let currentDay = currentDate.getDate();
 let currentMonth = currentDate.getMonth();
 let currentYear = currentDate.getFullYear();
 let dayString;
+let isDayClick = true;
 
 let activitiesCalendar =
   JSON.parse(localStorage.getItem("activitiesOnCalendar")) || [];
@@ -79,9 +80,30 @@ function editActivity(event) {
           return;
         }
 
+        activitiesCalendar = activitiesCalendar.map((task) => {
+          if (task.activity === activities[i].name) {
+            return {
+              ...task, // Mantiene los datos originales
+              activity: actualizeActivity.name,
+              description: actualizeActivity.description,
+              color: actualizeActivity.color,
+            };
+          }
+          return task;
+        });
+
+        localStorage.setItem(
+          "activitiesOnCalendar",
+          JSON.stringify(activitiesCalendar)
+        );
+
+        console.log("Calendario actualizado:", activitiesCalendar);
+
         activities[i] = actualizeActivity;
+
         localStorage.setItem("activities", JSON.stringify(activities));
-        loadActivities();
+
+        initApp();
 
         newActivity.querySelector("input").value = "";
         newActivity.querySelector("div input[type=color]").value = "#000000";
@@ -140,85 +162,84 @@ function loadActivities() {
     divTask.innerHTML = `<input type="checkbox" id="checkbox${i}" class="checkbox-activity"><label class="activity_name-of-activity" for="checkbox${i}">${activities[i].name}</label><button onclick="editActivity(event)"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-pen"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></svg></button>`;
 
     let checkBox = document.getElementById(`checkbox${i}`);
+    checkBox.checked = true;
     checkBox.onchange = () => {
       let content = checkBox.parentElement.querySelector("label").innerText;
-
-      let ver = Array.from(document.querySelectorAll(".calendar button"));
+      let ver = Array.from(document.querySelectorAll(".calendar button div"));
       let verName = ver.filter((button) => button.innerText === content);
       verName.forEach((button) =>
         button.setAttribute("data-content", button.innerText.trim())
       );
       let verName1 = ver.filter((button) => button.dataset.content === content);
-
       if (checkBox.checked) {
-        verName1.forEach((button) => button.classList.add("hidden"));
-      } else {
         verName1.forEach((button) => button.classList.remove("hidden"));
+      } else {
+        verName1.forEach((button) => button.classList.add("hidden"));
       }
     };
 
     option = document.createElement("option");
     selectActivity.appendChild(option);
     option.id = `activity${i}`;
-    option.innerHTML = `<option value="${i}">${activities[i].name}</option>`;
+    option.value = `${activities[i].name}`;
+    option.innerHTML = `${activities[i].name}`;
   });
 }
 
 function openNewTask() {
-  newDayActivity.classList.remove("hidden");
-
   dateTimeTask.value = `${currentYear}-${addZeroToNumber(
     currentMonth + 1
   )}-${addZeroToNumber(currentDay)}`;
+  newDayActivity.classList.remove("hidden");
 
-  if (!x) {
+  if (isDayClick) {
     newDayActivity.querySelector("select").value = "";
     newDayActivity.querySelector("div input[type=color]").value = "#000000";
     newDayActivity.querySelector("div input[type=text]").value = "";
-  }
-  x = false;
+    deleteTask.classList.add("hidden");
 
-  saveTask.onclick = () => {
-    event.preventDefault();
-    if (selectActivity.value === "") {
-      window.alert("Please select an activity");
-    } else {
-      newDayActivity.classList.add("hidden");
-      addTaskToDay();
-      newDayActivity.querySelector("select").value = "";
-      newDayActivity.querySelector("div input[type=color]").value = "#000000";
-      newDayActivity.querySelector("div input[type=text]").value = "";
-      if (selectMode.value === "Year") {
-        generateYear();
-      } else if (selectMode.value === "Month") {
-        generateCalendar(currentMonth, currentYear);
-      } else if (selectMode.value === "Week") {
-        generateWeek();
+    saveTask.onclick = () => {
+      event.preventDefault();
+      if (selectActivity.value === "") {
+        window.alert("Please select an activity");
       } else {
-        generateAgend(currentDay);
-      }
-    }
-  };
-
-  closeTask.onclick = () => {
-    event.preventDefault();
-    newDayActivity.classList.add("hidden");
-  };
-
-  selectActivity.onchange = () => {
-    if (selectActivity.value !== "") {
-      activities.forEach((activity) => {
-        currentSelect =
-          selectActivity.options[selectActivity.selectedIndex].text;
-        if (currentSelect === activity.name) {
-          newDayActivity.querySelector("div input[type=color]").value =
-            activity.color;
-          newDayActivity.querySelector("div input[type=text]").value =
-            activity.description;
+        newDayActivity.classList.add("hidden");
+        addTaskToDay();
+        newDayActivity.querySelector("select").value = "";
+        newDayActivity.querySelector("div input[type=color]").value = "#000000";
+        newDayActivity.querySelector("div input[type=text]").value = "";
+        if (selectMode.value === "Year") {
+          generateYear();
+        } else if (selectMode.value === "Month") {
+          generateCalendar(currentMonth, currentYear);
+        } else if (selectMode.value === "Week") {
+          generateWeek();
+        } else {
+          generateAgend(currentDay);
         }
-      });
-    }
-  };
+      }
+    };
+
+    closeTask.onclick = () => {
+      event.preventDefault();
+      newDayActivity.classList.add("hidden");
+    };
+
+    selectActivity.onchange = () => {
+      if (selectActivity.value !== "") {
+        activities.forEach((activity) => {
+          currentSelect =
+            selectActivity.options[selectActivity.selectedIndex].text;
+          if (currentSelect === activity.name) {
+            newDayActivity.querySelector("div input[type=color]").value =
+              activity.color;
+            newDayActivity.querySelector("div input[type=text]").value =
+              activity.description;
+          }
+        });
+      }
+    };
+  }
 }
 
 function addTaskToDay() {
@@ -227,19 +248,16 @@ function addTaskToDay() {
   currentYear = Number(dateTimeTask.value.slice(0, 4));
 
   let activity = selectActivity.value;
-
   let description = newDayActivity.querySelector("div input[type=text]").value;
-
   let color = newDayActivity.querySelector("div input[type=color]").value;
-
   let task = {
     activity: activity,
     description: description,
     date: `${currentYear}/${addZeroToNumber(
       currentMonth + 1
     )}/${addZeroToNumber(currentDay)}`,
-    day: `${currentDay}`,
-    month: `${currentMonth}`,
+    day: `${addZeroToNumber(currentDay)}`,
+    month: `${addZeroToNumber(currentMonth + 1)}`,
     year: `${currentYear}`,
     color: color,
   };
@@ -251,6 +269,117 @@ function addTaskToDay() {
   );
 }
 
+function editTask() {
+  let divDaysTask = Array.from(
+    document.querySelectorAll(".container-days-calendar")
+  );
+  divDaysTask.forEach((task) => {
+    task.onclick = () => {
+      let activity;
+      let color;
+      let description;
+      let date;
+      if (
+        selectMode.value === "Month" ||
+        selectMode.value === "Week" ||
+        selectMode.value === "Year"
+      ) {
+        activity = task.innerText;
+        color = task.lastChild.innerText.slice(0, 7);
+        description = task.lastChild.innerText.slice(19);
+        date = task.lastChild.innerText.slice(8, 18);
+      } else if (selectMode.value === "Day") {
+        activity = task.firstElementChild.innerText;
+        color = task.lastElementChild.innerText.slice(10);
+        description = task.firstElementChild.nextElementSibling.innerText;
+        date = task.lastElementChild.innerText.slice(0, 10);
+      }
+
+      selectActivity.value = activity;
+      newDayActivity.querySelector("div input[type=color]").value = color;
+      newDayActivity.querySelector("div input[type=text]").value = description;
+      newDayActivity.classList.remove("hidden");
+      deleteTask.classList.remove("hidden");
+
+      isDayClick = false;
+      setTimeout(() => {
+        isDayClick = true;
+      }, 300);
+
+      let lastTask = {
+        activity: activity,
+        description: description,
+        date: date,
+        day: date.slice(8, 10),
+        month: date.slice(5, 7),
+        year: date.slice(0, 4),
+        color: color,
+      };
+      let index = activitiesCalendar.findIndex(
+        (task) =>
+          task.activity === lastTask.activity &&
+          task.description === lastTask.description &&
+          task.date === lastTask.date &&
+          task.day === lastTask.day &&
+          task.month === lastTask.month &&
+          task.year === lastTask.year &&
+          task.color === lastTask.color
+      );
+      deleteTask.onclick = () => {
+        if (index !== -1) {
+          activitiesCalendar.splice(index, 1);
+          localStorage.setItem(
+            "activitiesOnCalendar",
+            JSON.stringify(activitiesCalendar)
+          );
+        }
+      };
+      selectActivity.onchange = () => {
+        if (selectActivity.value !== "") {
+          activities.forEach((activity) => {
+            currentSelect =
+              selectActivity.options[selectActivity.selectedIndex].text;
+            if (currentSelect === activity.name) {
+              newDayActivity.querySelector("div input[type=color]").value =
+                activity.color;
+              newDayActivity.querySelector("div input[type=text]").value =
+                activity.description;
+              saveTask.onclick = () => {
+                event.preventDefault();
+                activitiesCalendar.splice(index, 1);
+                localStorage.setItem(
+                  "activitiesOnCalendar",
+                  JSON.stringify(activitiesCalendar)
+                );
+                addTaskToDay();
+                newDayActivity.classList.add("hidden");
+                newDayActivity.querySelector("select").value = "";
+                newDayActivity.querySelector("div input[type=color]").value =
+                  "#000000";
+                newDayActivity.querySelector("div input[type=text]").value = "";
+                if (selectMode.value === "Year") {
+                  generateYear();
+                } else if (selectMode.value === "Month") {
+                  generateCalendar(currentMonth, currentYear);
+                } else if (selectMode.value === "Week") {
+                  generateWeek();
+                } else {
+                  generateAgend(currentDay);
+                }
+              };
+            }
+          });
+        }
+      };
+
+      closeTask.onclick = () => {
+        event.preventDefault();
+        newDayActivity.classList.add("hidden");
+      };
+    };
+  });
+}
+
 function areThereTasks(container, day, month, year) {
   if (
     selectMode.value === "Month" ||
@@ -258,17 +387,19 @@ function areThereTasks(container, day, month, year) {
     selectMode.value === "Year"
   ) {
     activitiesCalendar.forEach((activity) => {
+      editTask();
       if (
-        month === Number(activity.month) &&
+        month + 1 === Number(activity.month) &&
         day === Number(activity.day) &&
         year === Number(activity.year)
       ) {
-        let datos = document.createElement("button");
+        let datos = document.createElement("div");
         datos.style.backgroundColor = `${activity.color}aa`;
         datos.classList.add("calendar_day_datos");
+        datos.classList.add("container-days-calendar");
         datos.innerText = activity.activity;
         let p = document.createElement("p");
-        p.innerText = `${activity.color} ${activity.description} ${activity.date}`;
+        p.innerText = `${activity.color} ${activity.date} ${activity.description}`;
         p.classList.add("hidden");
         datos.appendChild(p);
         container.appendChild(datos);
@@ -308,8 +439,9 @@ function areThereTasks(container, day, month, year) {
     let usedSlots = new Set();
 
     activitiesCalendar.forEach((activity) => {
+      editTask();
       if (
-        Number(activity.month) === month &&
+        Number(activity.month) === month + 1 &&
         Number(activity.day) === day &&
         Number(activity.year) === year
       ) {
@@ -323,7 +455,7 @@ function areThereTasks(container, day, month, year) {
           }
         }
         if (slot) {
-          slot.innerHTML = `<div><h3>${activity.activity}</h3><p>${activity.description}</p></div>`;
+          slot.innerHTML = `<div class="container-days-calendar"><h3>${activity.activity}</h3><p>${activity.description}</p><p class="hidden">${activity.date}${activity.color}</p></div>`;
           slot.firstElementChild.style.backgroundColor = `${activity.color}aa`;
           usedSlots.add(slot);
         }
@@ -361,6 +493,7 @@ const switchMode = () => {
       newDayActivity.classList.add("hidden");
       actualizeMonth();
       generateAgend();
+
       break;
     case "Week":
       calendarWeekly.classList.remove("hidden");
@@ -370,6 +503,7 @@ const switchMode = () => {
       newDayActivity.classList.add("hidden");
       actualizeMonth();
       generateWeek();
+
       break;
     case "Year":
       calendarYearly.classList.remove("hidden");
@@ -379,6 +513,7 @@ const switchMode = () => {
       newDayActivity.classList.add("hidden");
       actualizeMonth();
       generateYear();
+
       break;
     default:
       calendarMonthly.classList.remove("hidden");
@@ -559,18 +694,16 @@ function generateYear() {
           clickCount = 0;
           dayButton.ondblclick = () => {
             event.preventDefault();
-            let newDate = new Date(currentYear, i + 1, day, 0);
+            let newDate = new Date(currentYear, i, day, 0);
             currentDate = newDate;
             currentMonth = newDate.getMonth();
             currentYear = newDate.getFullYear();
             currentDay = day;
-            infoSelect.innerText = `${addZeroToNumber(
-              currentMonth
-            )} / ${currentYear}`;
             calendarDaily.classList.remove("hidden");
             calendarYearly.classList.add("hidden");
             selectMode.value = "Day";
             newDayActivity.classList.add("hidden");
+            actualizeMonth();
             generateAgend(currentDay);
           };
         }
@@ -705,7 +838,6 @@ function changeWeek(offset) {
 // Fuction to actualize the day
 function generateAgend(day) {
   slotsDay.innerHTML = "";
-
   let newActualDate = new Date(currentYear, currentMonth, currentDay);
   let newCurrenDate = newActualDate.getDay();
   dayCalendarOnDaily.innerText = `${whichDayIsIt(
@@ -725,6 +857,7 @@ function generateAgend(day) {
       openNewTask();
     };
   }
+
   areThereTasks(slotsDay.children, currentDay, currentMonth, currentYear);
 }
 arrowBackCalendar.addEventListener("click", generateAgend);
@@ -784,16 +917,13 @@ function generateCalendar(currentMonth, currentYear) {
         beforeDays.onclick = () => {
           currentDay = Number(beforeDays.firstElementChild.innerHTML);
           changeMonth(-1);
-          openNewTask();
         };
       } else if (day <= daysInMonth) {
         let dayDiv = document.createElement("button");
         dayDiv.innerHTML = `<p class="calendar-monthly_day_number_p">${day}</p>`;
         dayDiv.classList.add("calendar-monthly_day_number");
         daysContainer.appendChild(dayDiv);
-
         areThereTasks(dayDiv, day, currentMonth, currentYear);
-
         day++;
         let clickCount = 0;
         dayDiv.onclick = () => {
@@ -831,7 +961,6 @@ function generateCalendar(currentMonth, currentYear) {
         afterDays.onclick = () => {
           currentDay = Number(afterDays.firstElementChild.innerHTML);
           changeMonth(1);
-          openNewTask();
         };
       }
     }
@@ -874,6 +1003,7 @@ function changeMonth(offset) {
 function initApp() {
   actualizeMonth();
   generateCalendar(currentMonth, currentYear);
+
   lucideMoon.classList.add("hidden");
 
   if (localStorage.length === 0) {

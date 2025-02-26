@@ -3,37 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link id="theme" rel="stylesheet" href="styles-night.css">
+    <link id="theme" rel="stylesheet" href="/styles/styles-night.css">
     <title>Calendar by Emi</title>
     
 </head>
 <body>
-        <!-- 01/02/2025 1hr: Structure Calendar on HTML and give it some styling !-->
-        <!-- 05/02/2025 2hrs: Styling CSS and start to build Javascript !-->
-        <!-- 06/02/2025 3hrs: Continue build Javascript !-->
-        <!-- 08/02/2025 3hrs: Continue build Javascript !-->
-        <!-- 10/02/2025 2hrs: Continue build Javascript !-->
-        <!-- 11/02/2025 4hrs: Continue build Javascript !-->
-        <!-- 12/02/2025 2hrs: Generate activity.html, continuos grow script.js !-->
-        <!-- 13/02/2025 2.5hrs: Continue grow JS and reforme button Switch night mode !-->
-        <!-- 14/02/2025 2hrs: Reforme some fuctions !-->
-        <!-- 16/02/2025 4hrs: Add function buttons when click on a day !-->
-        <!-- 17/02/2025 7.5hrs: Finish .js calendar, add pop up day task !-->
-        <!-- 18/02/2025 4hrs: Add function to Activities and popUp !-->
-        <!-- 19/02/2025 4hrs: Actualize calendar when you add a task !-->
-        <!-- 20/02/2025 5.5hrs: Keep growing the JS, one mistake to fix. Styling some CSS, make prettier the app !-->
-        <!-- 21/02/2025 3hrs: Add Edit Activity, fix little errors, style CSS !-->
-        <!-- 22/02/2025 2hrs: Style CSS !-->
-        <!-- 24/02/2025 5hrs: Fix bug in Calendar Year, edit styles-day.css !-->
-        <!-- 25/02/2025 4.5hrs: Fix checkbox activities, add edit and delete mode !-->
-
-
-
-        <!-- Atention to the error on the CurrentYear when we pass the year and try a task !-->
-        <!-- Make to checkbox of Activity (in the menu) function to check, only view these activities !-->
-
-
-
     <div class="calendar">
         <div class="switch-calendar">
             <div>
@@ -43,9 +17,9 @@
                 
             </div>
             <select class="switch-calendar_change-view" id="switch-mode">
-                <option>Month</option>
                 <option>Day</option>
                 <option>Week</option>
+                <option>Month</option>
                 <option>Year</option>
             </select>
             <button id="switch-theme"><svg id="lucide-moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><svg id="lucide-sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></button>
@@ -105,7 +79,7 @@
         </div>
         <div class="activity_new-activity" >
             <form id="new-activity" class="hidden">
-                <input type="text" maxlength="20" placeholder="Activity">
+                <input type="text" maxlength="10" placeholder="Activity">
                 <textarea placeholder="Description" maxlength="80"></textarea>
                 <div>
                     <input type="color">

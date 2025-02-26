@@ -26,7 +26,7 @@
   text-align: left;
   text-decoration: none;
   text-indent: 0;
-  color: var(--night1);
+  color: var(--day1);
 }
 button::-moz-focus-inner,
 input::-moz-focus-inner {
@@ -39,7 +39,7 @@ input::-moz-focus-inner {
 body {
   width: 100%;
   height: 100dvh;
-  background-color: var(--background-day);
+  background-color: var(--background-night);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -64,7 +64,7 @@ button {
 
 .calendar svg {
   border: 1px solid transparent;
-  color: var(--night1);
+  color: var(--day1);
 }
 .calendar svg:hover {
   background-color: var(--day2);
@@ -104,7 +104,7 @@ select {
 select option {
   width: 100%;
   border: 1px solid transparent;
-  background-color: var(--background-day);
+  background-color: var(--background-night);
   text-align: center;
   font-size: 0.8rem;
 }
@@ -113,17 +113,18 @@ select option {
   width: 4rem;
   height: 2rem;
   border-radius: 2rem;
-  background-color: var(--day2);
+  background-color: var(--night2);
   border: 1px solid transparent;
   display: flex;
 }
 #switch-theme:hover {
-  border: 1px solid var(--day3);
+  border: 1px solid var(--day1);
 }
 #switch-theme svg {
-  background-color: var(--day1);
+  background-color: var(--day3);
   border-radius: 2rem;
   margin-inline: 3px;
+  transition: all 0.2s cubic-bezier(0.52, 0.38, 0.95, 0.8);
 }
 
 /* MONHTHLY SELECTION */
@@ -145,20 +146,20 @@ select option {
 .calendar-monthly_day_number {
   display: flex;
   flex-direction: column;
-  background-color: var(--day1);
+  background-color: var(--day3);
   font-size: 0.8rem;
   border: 1px solid transparent;
   transition: all 0.2s cubic-bezier(0.52, 0.38, 0.95, 0.8);
 }
 .calendar-monthly_day_number:hover,
 .calendar-monthly_day_number_out-of-month:hover {
-  border: 1px solid var(--day2);
-  background-color: var(--background-day);
+  border: 1px solid var(--day1);
+  background-color: var(--day2);
 }
 .calendar-monthly_day_number_out-of-month {
   display: flex;
   flex-direction: column;
-  background-color: var(--day1);
+  background-color: var(--day3);
   font-size: 0.8rem;
   opacity: 0.5;
   border: 1px solid transparent;
@@ -187,7 +188,7 @@ select option {
   width: 100%;
 }
 .calendar-weekly_day {
-  background-color: var(--day1);
+  background-color: var(--day3);
   display: flex;
   width: 100%;
   height: 100%;
@@ -195,16 +196,16 @@ select option {
 .calendar-weekly_day_number {
   display: flex;
   flex-direction: column;
+
   height: 100%;
   width: 100%;
-  border: 1px solid transparent;
-  border: 1px solid var(--background-day);
+  border: 1px solid var(--background-night);
   text-align: center;
   transition: all 0.2s cubic-bezier(0.52, 0.38, 0.95, 0.8);
 }
 .calendar-weekly_day_number:hover {
-  border: 1px solid var(--night1);
-  background-color: var(--background-day);
+  border: 1px solid var(--day1);
+  background-color: var(--day2);
 }
 .calendar-weekly_day_number_p {
   height: 1.6rem;
@@ -235,7 +236,7 @@ select option {
 }
 .calendar-day_horarios {
   height: 100%;
-  background-color: var(--day1);
+  background-color: var(--day3);
   display: grid;
   grid-template-columns: 1fr 6fr;
   grid-template-rows: repeat(12, 1fr);
@@ -243,7 +244,7 @@ select option {
 .calendar-day_horarios_horarios {
   height: 100%;
   grid-area: 1 / 1 / 13 / 2;
-  border: 1px solid var(--background-day);
+  border: 1px solid var(--background-night);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -256,8 +257,8 @@ select option {
 
 .calendar-day_horarios_2hs {
   height: 100%;
-  border-top: 1px solid var(--background-day);
-  border-right: 1px solid var(--background-day);
+  border-top: 1px solid var(--background-night);
+  border-right: 1px solid var(--background-night);
 }
 .calendar-day_horarios_2hs div {
   height: 100%;
@@ -278,7 +279,7 @@ select option {
   font-size: 0.8rem;
 }
 .calendar-day_horarios_2hs:last-of-type {
-  border-bottom: 1px solid var(--background-day);
+  border-bottom: 1px solid var(--background-night);
 }
 
 /* YEARLY SELECTION */
@@ -346,8 +347,8 @@ select option {
 .calendar_day_datos:hover,
 .calendar_day_datos_weekly:hover,
 .calendar-day_horarios_2hs div:hover {
-  border-bottom: 1px solid var(--night1);
-  border-top: 1px solid var(--night1);
+  border-bottom: 1px solid var(--day1);
+  border-top: 1px solid var(--day1);
   border-radius: 0;
 }
 
@@ -358,7 +359,7 @@ select option {
   position: absolute;
   border-radius: 1rem;
   padding: 1rem;
-  background-color: var(--day1);
+  background-color: var(--day2);
   display: flex;
   flex-direction: column;
 }
@@ -373,17 +374,16 @@ select option {
 #new-day-activity button svg {
   outline: none;
   border: none;
-  stroke: var(--day2);
+  stroke: var(--background-day);
 }
 #new-day-activity button:hover,
 #new-day-activity button:hover svg {
-  background-color: var(--day2);
+  background-color: var(--background-night);
 }
 #new-day-activity div {
   width: 90%;
   height: 2rem;
   margin: 0.5rem;
-
   border: none;
   display: flex;
   justify-content: center;
@@ -404,7 +404,7 @@ select option {
 .activity {
   height: fit-content;
   width: fit-content;
-  background-color: var(--day1);
+  background-color: var(--day3);
   margin: 1rem;
   border-radius: 1rem;
   align-self: center;
@@ -420,14 +420,14 @@ select option {
 }
 #place-activity svg:hover {
   border-radius: 100%;
-  background-color: var(--background-day);
+  background-color: var(--background-night);
   cursor: pointer;
   transition: background-color 0.2s cubic-bezier(0.52, 0.38, 0.95, 0.8);
 }
 
 .activity_activities {
   height: 100%;
-  width: 15rem;
+  width: 16rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -437,19 +437,17 @@ select option {
   padding: 0.5rem 0;
   display: flex;
   align-items: center;
-  justify-content: start;
+  justify-content: center;
 }
-
 .activity_activities_individual button {
-  justify-self: end;
+  margin: 0.1rem 0.5rem;
 }
-
 /* NEW ACTIVITY FORM */
 .activity_new-activity {
   height: fit-content;
   max-width: 20rem;
   width: 100%;
-  background-color: var(--day1);
+  background-color: var(--day3);
   border-end-end-radius: 1rem;
   border-end-start-radius: 1rem;
 }
@@ -464,7 +462,7 @@ select option {
 #new-day-activity * {
   margin: 0.5rem;
   font-size: 0.9rem;
-  border: 1px solid var(--background-day);
+  border: 1px solid var(--background-night);
   border-radius: 0.5rem;
 }
 .activity_new-activity form input {
@@ -472,21 +470,21 @@ select option {
   max-width: 100%;
   margin: 0.5rem;
 
-  background-color: var(--background-day);
+  background-color: var(--background-night);
   outline: 1px solid transparent;
 }
 .activity_new-activity form textarea {
   min-width: 15rem;
-  max-width: 19rem;
+  max-width: 15rem;
   min-height: 5rem;
   max-height: 5rem;
   margin: 0.5rem;
-  background-color: var(--background-day);
+  background-color: var(--background-night);
   outline: 1px solid transparent;
 }
 .activity_new-activity form input:focus,
 .activity_new-activity form textarea:focus {
-  outline: 1px solid var(--background-day);
+  outline: 1px solid var(--background-night);
 }
 .activity_new-activity form textarea,
 .activity_new-activity form input {
@@ -523,7 +521,7 @@ select option {
 }
 .activity_new-activity form .save-activity:hover,
 #new-day-activity .save-activity:hover {
-  background-color: var(--background-day);
+  background-color: var(--background-night);
 }
 
 /* PERZONALIZE INPUTS */
@@ -549,18 +547,18 @@ input[type="checkbox" i] {
   width: 1rem;
   height: 1rem;
   border-radius: 5px;
-  border: 1px solid var(--night1);
+  border: 1px solid var(--day1);
   display: inline-block;
   transition: all 0.2s cubic-bezier(0.52, 0.38, 0.95, 0.8);
   background-color: transparent;
 }
 
 input[type="checkbox"]:checked + .activity_name-of-activity::before {
-  background-color: var(--background-day);
-  border-color: var(--background-day);
+  background-color: var(--background-night);
+  border-color: var(--background-night);
   content: "✔";
   font-size: 1rem;
-  color: var(--background-night);
+  color: var(--background-day);
   display: flex;
   justify-content: center;
   align-items: center;

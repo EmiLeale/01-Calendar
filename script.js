@@ -42,11 +42,30 @@ let currentMonth = currentDate.getMonth();
 let currentYear = currentDate.getFullYear();
 let dayString;
 let isDayClick = true;
-
 let activitiesCalendar =
   JSON.parse(localStorage.getItem("activitiesOnCalendar")) || [];
 let activities = JSON.parse(localStorage.getItem("activities")) || [];
 
+// Delete activity
+function deleteActivity() {
+  let labelActivity =
+    event.target.closest("button").parentElement.firstElementChild
+      .nextElementSibling;
+  activities = activities.filter(
+    (activity) => activity.name !== labelActivity.innerText
+  );
+  localStorage.setItem("activities", JSON.stringify(activities));
+
+  activitiesCalendar = activitiesCalendar.filter(
+    (task) => task.activity !== labelActivity.innerText
+  );
+  localStorage.setItem(
+    "activitiesOnCalendar",
+    JSON.stringify(activitiesCalendar)
+  );
+
+  initApp();
+}
 // Edit activities
 function editActivity(event) {
   let btnEdit = event.target;
@@ -117,16 +136,6 @@ function createActivity() {
   newActivity.querySelector("div input[type=color]").value = "#000000";
   newActivity.querySelector("textarea").value = "";
 
-  if (activitiesContainer.classList.contains("hidden")) {
-    newActivity.classList.remove("hidden");
-
-    placeActivityMinus.classList.remove("hidden");
-    placeActivityPlace.classList.add("hidden");
-  } else {
-    newActivity.classList.toggle("hidden");
-    placeActivityMinus.classList.toggle("hidden");
-    placeActivityPlace.classList.toggle("hidden");
-  }
   saveActivity.onclick = () => {
     event.preventDefault();
     let activity = {
@@ -140,7 +149,7 @@ function createActivity() {
     }
     activities.push(activity);
     localStorage.setItem("activities", JSON.stringify(activities));
-    loadActivities();
+    initApp();
     newActivity.querySelector("input").value = "";
     newActivity.querySelector("div input[type=color]").value = "#000000";
     newActivity.querySelector("textarea").value = "";
@@ -152,76 +161,23 @@ function loadActivities() {
   activitiesContainer.innerHTML = ``;
   selectActivity.innerHTML = `<option value="" disabled selected>Select activity</option>`;
 
+  if (activities.length === 0) {
+    createActivity();
+    newActivity.classList.remove("hidden");
+    placeActivityMinus.classList.remove("hidden");
+    placeActivityPlace.classList.add("hidden");
+  }
+
   activities.forEach((activity, i) => {
     divTask = document.createElement("div");
     activitiesContainer.appendChild(divTask);
     divTask.classList.add("activity_activities_individual");
-    divTask.innerHTML = `<input type="checkbox" id="checkbox${i}" class="checkbox-activity"><label class="activity_name-of-activity" for="checkbox${i}">${activities[i].name}</label><button onclick="editActivity(event)"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-pen"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></svg></button>`;
+    divTask.innerHTML = `<input type="checkbox" id="checkbox${i}" class="checkbox-activity"><label class="activity_name-of-activity" for="checkbox${i}">${activities[i].name}</label><button onclick="editActivity(event)"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-pen"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></svg></button><button onclick="deleteActivity(event)"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg></button>`;
 
     let checkBox = document.getElementById(`checkbox${i}`);
     checkBox.checked = true;
 
-    checkBox.onchange = () => {
-      event.preventDefault();
-      let content = checkBox.parentElement.querySelector("label").innerText;
-      let ver = Array.from(
-        document.querySelectorAll(".container-days-calendar")
-      );
-      let verName;
-      let verName1;
-
-      if (selectMode.value === "Month" || selectMode.value === "Week") {
-        verName = ver.filter((button) => button.innerText === content);
-        verName.forEach((button) =>
-          button.setAttribute("data-content", button.innerText.trim())
-        );
-        verName1 = ver.filter((button) => button.dataset.content === content);
-
-        if (checkBox.checked) {
-          verName1.forEach((button) => button.classList.remove("hidden"));
-        } else {
-          verName1.forEach((button) => button.classList.add("hidden"));
-        }
-      } else if (selectMode.value === "Day") {
-        verName = ver.filter(
-          (button) => button.firstElementChild.innerText === content
-        );
-        verName.forEach((button) =>
-          button.setAttribute(
-            "data-content",
-            button.firstElementChild.innerText.trim()
-          )
-        );
-        verName1 = ver.filter((button) => button.dataset.content === content);
-
-        if (checkBox.checked) {
-          verName1.forEach((button) => button.classList.remove("hidden"));
-        } else {
-          verName1.forEach((button) => button.classList.add("hidden"));
-        }
-      }
-
-      if (selectMode.value === "Year") {
-        verName = ver.filter((button) => button.firstChild.data === content);
-        verName.forEach((button) =>
-          button.setAttribute("data-content", button.firstChild.data.trim())
-        );
-        verName1 = ver.filter((button) => button.dataset.content === content);
-
-        if (checkBox.checked) {
-          verName1.forEach((button) => {
-            button.parentElement.style.backgroundColor =
-              button.firstElementChild.innerText.slice(0, 7);
-          });
-        } else {
-          verName1.forEach((button) => {
-            {
-              button.parentElement.style.backgroundColor = "transparent";
-            }
-          });
-        }
-      }
-    };
+    changeCheck(checkBox);
 
     option = document.createElement("option");
     selectActivity.appendChild(option);
@@ -230,7 +186,81 @@ function loadActivities() {
     option.innerHTML = `${activities[i].name}`;
   });
 }
-placeActivity.addEventListener("click", createActivity);
+placeActivity.addEventListener("click", () => {
+  createActivity();
+  if (activities.length === 0) {
+    newActivity.classList.remove("hidden");
+    placeActivityMinus.classList.remove("hidden");
+    placeActivityPlace.classList.add("hidden");
+  } else {
+    newActivity.classList.toggle("hidden");
+    placeActivityMinus.classList.toggle("hidden");
+    placeActivityPlace.classList.toggle("hidden");
+  }
+});
+function changeCheck(input) {
+  input.onchange = () => {
+    event.preventDefault();
+    let content = input.parentElement.querySelector("label").innerText;
+    let ver = Array.from(document.querySelectorAll(".container-days-calendar"));
+    let verName;
+    let verName1;
+
+    if (selectMode.value === "Month" || selectMode.value === "Week") {
+      verName = ver.filter((button) => button.innerText === content);
+      verName.forEach((button) =>
+        button.setAttribute("data-content", button.innerText.trim())
+      );
+      verName1 = ver.filter((button) => button.dataset.content === content);
+
+      if (input.checked) {
+        verName1.forEach((button) => button.classList.remove("hidden"));
+      } else {
+        verName1.forEach((button) => button.classList.add("hidden"));
+      }
+    } else if (selectMode.value === "Day") {
+      verName = ver.filter(
+        (button) => button.firstElementChild.innerText === content
+      );
+      verName.forEach((button) =>
+        button.setAttribute(
+          "data-content",
+          button.firstElementChild.innerText.trim()
+        )
+      );
+      verName1 = ver.filter((button) => button.dataset.content === content);
+
+      if (input.checked) {
+        verName1.forEach((button) => button.classList.remove("hidden"));
+      } else {
+        verName1.forEach((button) => button.classList.add("hidden"));
+      }
+    }
+
+    if (selectMode.value === "Year") {
+      verName = ver.filter((button) => button.firstChild.data === content);
+      verName.forEach((button) =>
+        button.setAttribute("data-content", button.firstChild.data.trim())
+      );
+      verName1 = ver.filter((button) => button.dataset.content === content);
+
+      if (input.checked) {
+        verName1.forEach((button) => {
+          button.parentElement.style.backgroundColor = `${button.firstElementChild.innerText.slice(
+            0,
+            7
+          )}aa`;
+        });
+      } else {
+        verName1.forEach((button) => {
+          {
+            button.parentElement.style.backgroundColor = "transparent";
+          }
+        });
+      }
+    }
+  };
+}
 
 // Open new Task on calendar
 function openNewTask() {
@@ -316,114 +346,118 @@ function addTaskToDay() {
 }
 // Edit Task on calendar
 function editTask() {
-  let divDaysTask = Array.from(
-    document.querySelectorAll(".container-days-calendar")
-  );
-  divDaysTask.forEach((task) => {
-    task.onclick = () => {
-      let activity;
-      let color;
-      let description;
-      let date;
-      if (
-        selectMode.value === "Month" ||
-        selectMode.value === "Week" ||
-        selectMode.value === "Year"
-      ) {
-        activity = task.innerText;
-        color = task.lastChild.innerText.slice(0, 7);
-        description = task.lastChild.innerText.slice(19);
-        date = task.lastChild.innerText.slice(8, 18);
-      } else if (selectMode.value === "Day") {
-        activity = task.firstElementChild.innerText;
-        color = task.lastElementChild.innerText.slice(10);
-        description = task.firstElementChild.nextElementSibling.innerText;
-        date = task.lastElementChild.innerText.slice(0, 10);
-      }
-
-      selectActivity.value = activity;
-      newDayActivity.querySelector("div input[type=color]").value = color;
-      newDayActivity.querySelector("div input[type=text]").value = description;
-      newDayActivity.classList.remove("hidden");
-      deleteTask.classList.remove("hidden");
-
-      isDayClick = false;
-      setTimeout(() => {
-        isDayClick = true;
-      }, 300);
-
-      let lastTask = {
-        activity: activity,
-        description: description,
-        date: date,
-        day: date.slice(8, 10),
-        month: date.slice(5, 7),
-        year: date.slice(0, 4),
-        color: color,
-      };
-      let index = activitiesCalendar.findIndex(
-        (task) =>
-          task.activity === lastTask.activity &&
-          task.description === lastTask.description &&
-          task.date === lastTask.date &&
-          task.day === lastTask.day &&
-          task.month === lastTask.month &&
-          task.year === lastTask.year &&
-          task.color === lastTask.color
-      );
-      deleteTask.onclick = () => {
-        if (index !== -1) {
-          activitiesCalendar.splice(index, 1);
-          localStorage.setItem(
-            "activitiesOnCalendar",
-            JSON.stringify(activitiesCalendar)
-          );
+  setTimeout(() => {
+    divDaysTask = Array.from(
+      document.querySelectorAll(".container-days-calendar")
+    );
+    divDaysTask.forEach((task) => {
+      task.onclick = () => {
+        let activity;
+        let color;
+        let description;
+        let date;
+        if (
+          selectMode.value === "Month" ||
+          selectMode.value === "Week" ||
+          selectMode.value === "Year"
+        ) {
+          activity = task.innerText;
+          color = task.lastChild.innerText.slice(0, 7);
+          description = task.lastChild.innerText.slice(19);
+          date = task.lastChild.innerText.slice(8, 18);
+        } else if (selectMode.value === "Day") {
+          activity = task.firstElementChild.innerText;
+          color = task.lastElementChild.innerText.slice(10);
+          description = task.firstElementChild.nextElementSibling.innerText;
+          date = task.lastElementChild.innerText.slice(0, 10);
         }
-      };
-      selectActivity.onchange = () => {
-        if (selectActivity.value !== "") {
-          activities.forEach((activity) => {
-            currentSelect =
-              selectActivity.options[selectActivity.selectedIndex].text;
-            if (currentSelect === activity.name) {
-              newDayActivity.querySelector("div input[type=color]").value =
-                activity.color;
-              newDayActivity.querySelector("div input[type=text]").value =
-                activity.description;
-              saveTask.onclick = () => {
-                event.preventDefault();
-                activitiesCalendar.splice(index, 1);
-                localStorage.setItem(
-                  "activitiesOnCalendar",
-                  JSON.stringify(activitiesCalendar)
-                );
-                addTaskToDay();
-                newDayActivity.classList.add("hidden");
-                newDayActivity.querySelector("select").value = "";
+
+        selectActivity.value = activity;
+        newDayActivity.querySelector("div input[type=color]").value = color;
+        newDayActivity.querySelector("div input[type=text]").value =
+          description;
+        newDayActivity.classList.remove("hidden");
+        deleteTask.classList.remove("hidden");
+
+        isDayClick = false;
+        setTimeout(() => {
+          isDayClick = true;
+        }, 300);
+
+        let lastTask = {
+          activity: activity,
+          description: description,
+          date: date,
+          day: date.slice(8, 10),
+          month: date.slice(5, 7),
+          year: date.slice(0, 4),
+          color: color,
+        };
+        let index = activitiesCalendar.findIndex(
+          (task) =>
+            task.activity === lastTask.activity &&
+            task.description === lastTask.description &&
+            task.date === lastTask.date &&
+            task.day === lastTask.day &&
+            task.month === lastTask.month &&
+            task.year === lastTask.year &&
+            task.color === lastTask.color
+        );
+        deleteTask.onclick = () => {
+          if (index !== -1) {
+            activitiesCalendar.splice(index, 1);
+            localStorage.setItem(
+              "activitiesOnCalendar",
+              JSON.stringify(activitiesCalendar)
+            );
+          }
+        };
+        selectActivity.onchange = () => {
+          if (selectActivity.value !== "") {
+            activities.forEach((activity) => {
+              currentSelect =
+                selectActivity.options[selectActivity.selectedIndex].text;
+              if (currentSelect === activity.name) {
                 newDayActivity.querySelector("div input[type=color]").value =
-                  "#000000";
-                newDayActivity.querySelector("div input[type=text]").value = "";
-                if (selectMode.value === "Year") {
-                  generateYear();
-                } else if (selectMode.value === "Month") {
-                  generateCalendar(currentMonth, currentYear);
-                } else if (selectMode.value === "Week") {
-                  generateWeek();
-                } else {
-                  generateAgend(currentDay);
-                }
-              };
-            }
-          });
-        }
-      };
+                  activity.color;
+                newDayActivity.querySelector("div input[type=text]").value =
+                  activity.description;
+                saveTask.onclick = () => {
+                  event.preventDefault();
+                  activitiesCalendar.splice(index, 1);
+                  localStorage.setItem(
+                    "activitiesOnCalendar",
+                    JSON.stringify(activitiesCalendar)
+                  );
+                  addTaskToDay();
+                  newDayActivity.classList.add("hidden");
+                  newDayActivity.querySelector("select").value = "";
+                  newDayActivity.querySelector("div input[type=color]").value =
+                    "#000000";
+                  newDayActivity.querySelector("div input[type=text]").value =
+                    "";
+                  if (selectMode.value === "Year") {
+                    generateYear();
+                  } else if (selectMode.value === "Month") {
+                    generateCalendar(currentMonth, currentYear);
+                  } else if (selectMode.value === "Week") {
+                    generateWeek();
+                  } else {
+                    generateAgend(currentDay);
+                  }
+                };
+              }
+            });
+          }
+        };
 
-      closeTask.onclick = () => {
-        event.preventDefault();
-        newDayActivity.classList.add("hidden");
+        closeTask.onclick = () => {
+          event.preventDefault();
+          newDayActivity.classList.add("hidden");
+        };
       };
-    };
-  });
+    });
+  }, 100);
 }
 
 // Function to check any Task and put on Calendar
@@ -476,7 +510,7 @@ function areThereTasks(container, day, month, year) {
             Array.from(container.children).forEach((child, i) => {
               if (i >= 0) {
                 child.classList.add("hidden");
-                container.style.backgroundColor = `${activity.color}aa`;
+                container.style.backgroundColor = "transparent";
               }
             });
           }
@@ -540,7 +574,6 @@ const switchMode = () => {
       newDayActivity.classList.add("hidden");
       actualizeMonth();
       generateAgend();
-
       break;
     case "Week":
       calendarWeekly.classList.remove("hidden");
@@ -550,7 +583,6 @@ const switchMode = () => {
       newDayActivity.classList.add("hidden");
       actualizeMonth();
       generateWeek();
-
       break;
     case "Year":
       calendarYearly.classList.remove("hidden");
@@ -560,7 +592,12 @@ const switchMode = () => {
       newDayActivity.classList.add("hidden");
       actualizeMonth();
       generateYear();
-
+      let checkBox = Array.from(
+        document.querySelectorAll("input[type=checkbox]")
+      );
+      checkBox.forEach((check) => {
+        check.checked = false;
+      });
       break;
     default:
       calendarMonthly.classList.remove("hidden");
@@ -810,6 +847,9 @@ function generateWeek() {
           if (clickCount === 1) {
             currentDay = dayObj.day;
             openNewTask();
+            dateTimeTask.value = `${dayObj.year}-${addZeroToNumber(
+              dayObj.month + 1
+            )}-${addZeroToNumber(dayObj.day)}`;
           }
           clickCount = 0;
         }, 250);
@@ -876,7 +916,9 @@ function changeWeek(offset) {
     }
     currentDay = currentDay - daysInMonth;
   }
-
+  dateTimeTask.value = `${currentYear}-${addZeroToNumber(
+    currentMonth + 1
+  )}-${addZeroToNumber(currentDay)}`;
   actualizeMonth();
   generateWeek();
 }
@@ -1040,16 +1082,23 @@ function changeMonth(offset) {
     currentDay = y.getDate();
     actualizeMonth();
     generateYear();
-
+    dateTimeTask.value = `${currentYear}-${addZeroToNumber(
+      currentMonth + 1
+    )}-${addZeroToNumber(currentDay)}`;
     return;
   }
+  dateTimeTask.value = `${currentYear}-${addZeroToNumber(
+    currentMonth + 1
+  )}-${addZeroToNumber(currentDay)}`;
   generateCalendar(currentMonth, currentYear);
 }
 
 // Init app
 function initApp() {
+  selectMode.value = "Month";
   actualizeMonth();
   generateCalendar(currentMonth, currentYear);
+  loadActivities();
 
   lucideSun.style.translate = "2rem";
   lucideMoon.classList.add("hidden");
@@ -1063,12 +1112,6 @@ function initApp() {
     link.href = link.href.replace("styles.css", "styles-night.css");
     lucideSun.classList.remove("hidden");
     lucideMoon.classList.add("hidden");
-  }
-
-  if (localStorage.length === 0) {
-    createActivity();
-  } else {
-    loadActivities();
   }
 
   document.onclick = (e) => {

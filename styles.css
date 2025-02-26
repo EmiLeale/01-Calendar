@@ -110,7 +110,7 @@ select option {
 }
 
 #switch-theme {
-  width: 48px;
+  width: 4rem;
   height: 2rem;
   border-radius: 2rem;
   background-color: var(--day2);
@@ -389,10 +389,16 @@ select option {
   justify-content: center;
   align-items: center;
 }
-
+#new-day-activity div input {
+  margin: 0.1rem;
+}
+#new-day-activity div button {
+  margin: 0.1rem;
+}
 #new-day-activity div button svg {
   margin: 0;
 }
+
 /* ACTIVITY SECTION */
 
 .activity {
@@ -554,7 +560,7 @@ input[type="checkbox"]:checked + .activity_name-of-activity::before {
   border-color: var(--background-day);
   content: "✔";
   font-size: 1rem;
-  color: white;
+  color: var(--background-night);
   display: flex;
   justify-content: center;
   align-items: center;

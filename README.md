@@ -11,7 +11,7 @@
 
 ## Overview
 
-CAPTURA
+![Captura](https://github.com/user-attachments/assets/7e8b3bd4-955d-4e91-8eb3-575fb3aa6c45)
 
 ### What I learned
 

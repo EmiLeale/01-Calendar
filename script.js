@@ -47,6 +47,7 @@ let activitiesCalendar =
   JSON.parse(localStorage.getItem("activitiesOnCalendar")) || [];
 let activities = JSON.parse(localStorage.getItem("activities")) || [];
 
+// Edit activities
 function editActivity(event) {
   let btnEdit = event.target;
   let label = btnEdit
@@ -97,8 +98,6 @@ function editActivity(event) {
           JSON.stringify(activitiesCalendar)
         );
 
-        console.log("Calendario actualizado:", activitiesCalendar);
-
         activities[i] = actualizeActivity;
 
         localStorage.setItem("activities", JSON.stringify(activities));
@@ -112,7 +111,7 @@ function editActivity(event) {
     }
   }
 }
-
+// Create activities
 function createActivity() {
   newActivity.querySelector("input").value = "";
   newActivity.querySelector("div input[type=color]").value = "#000000";
@@ -147,8 +146,6 @@ function createActivity() {
     newActivity.querySelector("textarea").value = "";
   };
 }
-placeActivity.addEventListener("click", createActivity);
-
 function loadActivities() {
   let activities = JSON.parse(localStorage.getItem("activities")) || [];
   activitiesContainer.classList.remove("hidden");
@@ -163,18 +160,66 @@ function loadActivities() {
 
     let checkBox = document.getElementById(`checkbox${i}`);
     checkBox.checked = true;
+
     checkBox.onchange = () => {
+      event.preventDefault();
       let content = checkBox.parentElement.querySelector("label").innerText;
-      let ver = Array.from(document.querySelectorAll(".calendar button div"));
-      let verName = ver.filter((button) => button.innerText === content);
-      verName.forEach((button) =>
-        button.setAttribute("data-content", button.innerText.trim())
+      let ver = Array.from(
+        document.querySelectorAll(".container-days-calendar")
       );
-      let verName1 = ver.filter((button) => button.dataset.content === content);
-      if (checkBox.checked) {
-        verName1.forEach((button) => button.classList.remove("hidden"));
-      } else {
-        verName1.forEach((button) => button.classList.add("hidden"));
+      let verName;
+      let verName1;
+
+      if (selectMode.value === "Month" || selectMode.value === "Week") {
+        verName = ver.filter((button) => button.innerText === content);
+        verName.forEach((button) =>
+          button.setAttribute("data-content", button.innerText.trim())
+        );
+        verName1 = ver.filter((button) => button.dataset.content === content);
+
+        if (checkBox.checked) {
+          verName1.forEach((button) => button.classList.remove("hidden"));
+        } else {
+          verName1.forEach((button) => button.classList.add("hidden"));
+        }
+      } else if (selectMode.value === "Day") {
+        verName = ver.filter(
+          (button) => button.firstElementChild.innerText === content
+        );
+        verName.forEach((button) =>
+          button.setAttribute(
+            "data-content",
+            button.firstElementChild.innerText.trim()
+          )
+        );
+        verName1 = ver.filter((button) => button.dataset.content === content);
+
+        if (checkBox.checked) {
+          verName1.forEach((button) => button.classList.remove("hidden"));
+        } else {
+          verName1.forEach((button) => button.classList.add("hidden"));
+        }
+      }
+
+      if (selectMode.value === "Year") {
+        verName = ver.filter((button) => button.firstChild.data === content);
+        verName.forEach((button) =>
+          button.setAttribute("data-content", button.firstChild.data.trim())
+        );
+        verName1 = ver.filter((button) => button.dataset.content === content);
+
+        if (checkBox.checked) {
+          verName1.forEach((button) => {
+            button.parentElement.style.backgroundColor =
+              button.firstElementChild.innerText.slice(0, 7);
+          });
+        } else {
+          verName1.forEach((button) => {
+            {
+              button.parentElement.style.backgroundColor = "transparent";
+            }
+          });
+        }
       }
     };
 
@@ -185,7 +230,9 @@ function loadActivities() {
     option.innerHTML = `${activities[i].name}`;
   });
 }
+placeActivity.addEventListener("click", createActivity);
 
+// Open new Task on calendar
 function openNewTask() {
   dateTimeTask.value = `${currentYear}-${addZeroToNumber(
     currentMonth + 1
@@ -241,7 +288,6 @@ function openNewTask() {
     };
   }
 }
-
 function addTaskToDay() {
   currentDay = Number(dateTimeTask.value.slice(8, 10));
   currentMonth = Number(dateTimeTask.value.slice(5, 7)) - 1;
@@ -268,7 +314,7 @@ function addTaskToDay() {
     JSON.stringify(activitiesCalendar)
   );
 }
-
+// Edit Task on calendar
 function editTask() {
   let divDaysTask = Array.from(
     document.querySelectorAll(".container-days-calendar")
@@ -380,7 +426,10 @@ function editTask() {
   });
 }
 
+// Function to check any Task and put on Calendar
 function areThereTasks(container, day, month, year) {
+  loadActivities();
+
   if (
     selectMode.value === "Month" ||
     selectMode.value === "Week" ||
@@ -470,14 +519,12 @@ function changeTheme() {
     link.href = link.href.replace("styles.css", "styles-night.css");
     lucideSun.classList.remove("hidden");
     lucideMoon.classList.add("hidden");
+    localStorage.setItem("theme", "night");
   } else if (link.href.endsWith("styles-night.css")) {
     link.href = link.href.replace("styles-night.css", "styles.css");
     lucideSun.classList.add("hidden");
     lucideMoon.classList.remove("hidden");
-  } else {
-    link.href = link.href.replace("styles.css", "styles-night.css");
-    lucideSun.classList.remove("hidden");
-    lucideMoon.classList.add("hidden");
+    localStorage.setItem("theme", "day");
   }
 }
 switchTheme.addEventListener("click", changeTheme);
@@ -574,6 +621,7 @@ const whichDayIsIt = (day) => {
   }
   return dayString;
 };
+
 // Function for pass the month and obtain a number
 const whichMonthIsIt = (month) => {
   switch (month) {
@@ -809,8 +857,6 @@ function generateWeek() {
     currentMonth + 1
   )} / ${currentYear}`;
 }
-arrowBackCalendar.addEventListener("click", changeWeek(-7));
-arrowNextCalendar.addEventListener("click", changeWeek(7));
 function changeWeek(offset) {
   currentDay += offset;
   let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
@@ -834,6 +880,8 @@ function changeWeek(offset) {
   actualizeMonth();
   generateWeek();
 }
+arrowBackCalendar.addEventListener("click", changeWeek(-7));
+arrowNextCalendar.addEventListener("click", changeWeek(7));
 
 // Fuction to actualize the day
 function generateAgend(day) {
@@ -860,10 +908,6 @@ function generateAgend(day) {
 
   areThereTasks(slotsDay.children, currentDay, currentMonth, currentYear);
 }
-arrowBackCalendar.addEventListener("click", generateAgend);
-arrowNextCalendar.addEventListener("click", generateAgend);
-
-// Function to actualize the day when click the arrows
 function changeDay(offset) {
   currentDay += offset;
   let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
@@ -886,6 +930,8 @@ function changeDay(offset) {
   actualizeMonth();
   generateAgend();
 }
+arrowBackCalendar.addEventListener("click", generateAgend);
+arrowNextCalendar.addEventListener("click", generateAgend);
 
 // Function to generate the calendar on Monthly
 function generateCalendar(currentMonth, currentYear) {
@@ -966,7 +1012,6 @@ function generateCalendar(currentMonth, currentYear) {
     }
   }
 }
-
 // Function to change the month and/or year
 function changeMonth(offset) {
   if (
@@ -983,6 +1028,7 @@ function changeMonth(offset) {
       currentYear++;
     }
     actualizeMonth();
+    generateWeek();
   } else if (selectMode.value === "Year") {
     currentYear = Number(infoSelect.innerText);
     currentYear += offset;
@@ -1000,11 +1046,24 @@ function changeMonth(offset) {
   generateCalendar(currentMonth, currentYear);
 }
 
+// Init app
 function initApp() {
   actualizeMonth();
   generateCalendar(currentMonth, currentYear);
 
+  lucideSun.style.translate = "2rem";
   lucideMoon.classList.add("hidden");
+  const savedTheme = localStorage.getItem("theme");
+
+  if (savedTheme === "day") {
+    link.href = link.href.replace("styles-night.css", "styles.css");
+    lucideSun.classList.add("hidden");
+    lucideMoon.classList.remove("hidden");
+  } else {
+    link.href = link.href.replace("styles.css", "styles-night.css");
+    lucideSun.classList.remove("hidden");
+    lucideMoon.classList.add("hidden");
+  }
 
   if (localStorage.length === 0) {
     createActivity();
@@ -1021,5 +1080,4 @@ function initApp() {
     }
   };
 }
-
 document.addEventListener("DOMContentLoaded", initApp);

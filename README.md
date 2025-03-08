@@ -52,4 +52,4 @@ You can also add, edit, and delete tasks, but this only affects the specific tas
 
 ## Author
 
-- GitHub [@your-username](https://github.com/Emi-Leale)
+- GitHub [@your-username](https://github.com/EmiLeale)
